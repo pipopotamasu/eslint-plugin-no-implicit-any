@@ -16,22 +16,28 @@ ruleTester.run(
     valid: [
       // FunctionDeclaration or FunctionExpression
       {
-        code: 'function foo (arg: any) {}',
+        code: 'function foo (arg1: any, arg2: any) {}',
       },
       {
-        code: 'const arrayObjFunc = [{ key: function (num: any) {} }];',
+        code: 'const arrayObjFunc = [{ key: function (arg1: any, arg2: any) {} }];',
+      },
+      {
+        code: 'function foo ({ arg1, arg2 }: any) {}',
       },
       // ArrowFunctionExpression
       {
-        code: 'const foo = (arg: any) => {}',
+        code: 'const foo = (arg1: any, arg2: any) => {}',
       },
       {
-        code: 'const arrayObjArrowFunc = [{ key: (num: any) => num + 1 }];',
+        code: 'const arrayObjArrowFunc = [{ key: (arg1: any, arg2: any ) => {} }];',
+      },
+      {
+        code: 'const foo = ({ arg1, arg2 }: any) => {}',
       },
       {
         code: `
-          type Foo = (firstArg: string, secondArg: string) => void
-          const foo: Foo = (firstArg, secondArg) => {};
+          type Foo = (arg1: string, arg2: string) => void
+          const foo: Foo = (arg1, arg2) => {};
         `,
       },
       // TODO: This should be passed.
@@ -46,26 +52,36 @@ ruleTester.run(
     invalid: [
       // FunctionDeclaration or FunctionExpression
       {
-        code: 'function foo (firstArg, secondArg) {}',
-        output: 'function foo (firstArg: any, secondArg: any) {}',
+        code: 'function foo (arg1, arg2) {}',
+        output: 'function foo (arg1: any, arg2: any) {}',
         errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
       },
       {
-        code: 'const arrayObjFunc = [{ key: function (num) {} }];',
-        output: 'const arrayObjFunc = [{ key: function (num: any) {} }];',
-        errors: [{ messageId: 'missingAnyType' }],
+        code: 'const arrayObjFunc = [{ key: function (arg1, arg2) {} }];',
+        output: 'const arrayObjFunc = [{ key: function (arg1: any, arg2: any) {} }];',
+        errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+      },
+      {
+        code: 'function foo ({ arg1, arg2 }) {}',
+        output: 'function foo ({ arg1, arg2 }: any) {}',
+        errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }]
       },
       // ArrowFunctionExpression
       {
-        code: 'const foo = (arg) => {}',
-        output: 'const foo = (arg: any) => {}',
-        errors: [{ messageId: 'missingAnyType' }],
+        code: 'const foo = (arg1, arg2) => {}',
+        output: 'const foo = (arg1: any, arg2: any) => {}',
+        errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
       },
       {
-        code: 'const arrayObjArrowFunc = [{ key: (num) => {} }];',
-        output: 'const arrayObjArrowFunc = [{ key: (num: any) => {} }];',
-        errors: [{ messageId: 'missingAnyType' }],
-      }
+        code: 'const arrayObjArrowFunc = [{ key: (arg1, arg2) => {} }];',
+        output: 'const arrayObjArrowFunc = [{ key: (arg1: any, arg2: any) => {} }];',
+        errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+      },
+      {
+        code: 'const foo = ({ arg1, arg2 }) => {}',
+        output: 'const foo = ({ arg1, arg2 }: any) => {}',
+        errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+      },
     ],
   }
 );
