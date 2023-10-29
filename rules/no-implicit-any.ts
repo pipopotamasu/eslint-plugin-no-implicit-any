@@ -3,36 +3,46 @@ import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 
 import * as ts from 'typescript';
 
-function checkParam (context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>, param: TSESTree.Parameter) {
-  if (!param['typeAnnotation']) {
+function checkArg (context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>, arg: TSESTree.Parameter) {
+  if (!arg['typeAnnotation']) {
     const parserServices = ESLintUtils.getParserServices(context);
-    const type = parserServices.getTypeAtLocation(param);
+    const type = parserServices.getTypeAtLocation(arg);
 
     if (type.flags === ts.TypeFlags.Any) {
       context.report({
-        node: param,
+        node: arg,
         messageId: 'missingAnyType',
         fix(fixer) {
-          return fixer.insertTextAfter(param, ': any');
+          return fixer.insertTextAfter(arg, ': any');
         },
       });
     } else if (type.flags === ts.TypeFlags.Object) {
-      (param as TSESTree.ObjectPattern).properties.forEach((property) => {
-        if (property.type === AST_NODE_TYPES.Property) {
-          if (!property.key['typeAnnotation']) {
-            const type = parserServices.getTypeAtLocation(property);
-            if (type.flags === ts.TypeFlags.Any) {
-              context.report({
-                node: param,
-                messageId: 'missingAnyType',
-                fix(fixer) {
-                  return fixer.insertTextAfter(param, ': any');
-                },
-              });
+      if (arg.type === AST_NODE_TYPES.ObjectPattern) {
+        arg.properties.forEach((property) => {
+          if (property.type === AST_NODE_TYPES.Property) {
+            if (!property.key['typeAnnotation']) {
+              const type = parserServices.getTypeAtLocation(property);
+              if (type.flags === ts.TypeFlags.Any) {
+                context.report({
+                  node: arg,
+                  messageId: 'missingAnyType',
+                  fix(fixer) {
+                    return fixer.insertTextAfter(arg, ': any');
+                  },
+                });
+              }
             }
           }
-        }
-      })
+        })
+      } else if (type.symbol?.escapedName === 'Array') {
+        context.report({
+          node: arg,
+          messageId: 'missingAnyType',
+          fix(fixer) {
+            return fixer.insertTextAfter(arg, ': any[]');
+          },
+        });
+      }
     }
   }
 }
@@ -51,18 +61,18 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
   create: function (context) {
     return {
       FunctionDeclaration(node) {
-        node.params.forEach((param) => {
-          checkParam(context, param);
+        node.params.forEach((arg) => {
+          checkArg(context, arg);
         });
       },
       FunctionExpression(node) {
-        node.params.forEach((param) => {
-          checkParam(context, param);
+        node.params.forEach((arg) => {
+          checkArg(context, arg);
         });
       },
       ArrowFunctionExpression(node) {
-        node.params.forEach((param) => {
-          checkParam(context, param);
+        node.params.forEach((arg) => {
+          checkArg(context, arg);
         });
       },
     };
