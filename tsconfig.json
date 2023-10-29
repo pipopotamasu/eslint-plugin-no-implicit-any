@@ -2,7 +2,8 @@
   "compilerOptions": {
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noImplicitAny": false,
   },
   "include": ["rules", "file.ts"],
   "exclude": ["node_modules"]
