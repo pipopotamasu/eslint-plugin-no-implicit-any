@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   entry: ['rules/index.ts'],
   splitting: false,
-  minify: true,
+  minify: false,
   sourcemap: true,
   clean: true,
   treeshake: true,
