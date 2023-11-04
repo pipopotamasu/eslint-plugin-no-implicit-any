@@ -98,7 +98,7 @@ ruleTester.run(
       },
     ],
     invalid: [
-      // // FunctionDeclaration or FunctionExpression
+      // FunctionDeclaration or FunctionExpression
       {
         code: 'function foo (arg1, arg2) {}',
         output: 'function foo (arg1: any, arg2: any) {}',
