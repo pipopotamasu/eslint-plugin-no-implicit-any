@@ -89,9 +89,16 @@ ruleTester.run(
       //     const foo: Foo = (arg1, arg2) => {};
       //   `,
       // },
+      // MemberExpression
+      {
+        code: `
+          const foo = { key: 'value' };
+          foo['key']
+        `,
+      },
     ],
     invalid: [
-      // FunctionDeclaration or FunctionExpression
+      // // FunctionDeclaration or FunctionExpression
       {
         code: 'function foo (arg1, arg2) {}',
         output: 'function foo (arg1: any, arg2: any) {}',
@@ -136,6 +143,18 @@ ruleTester.run(
       {
         code: 'const foo = ({ arg1, ...rest }) => {}',
         output: 'const foo = ({ arg1, ...rest }: any) => {}',
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      // MemberExpression
+      {
+        code: `
+          const foo = {}
+          foo['key']
+        `,
+        output: `
+          const foo = {}
+          (foo as any)['key']
+        `,
         errors: [{ messageId: 'missingAnyType' }]
       },
     ],

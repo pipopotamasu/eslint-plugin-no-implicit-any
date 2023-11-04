@@ -75,6 +75,22 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
           checkArg(context, arg);
         });
       },
+      MemberExpression(node) {
+        const parserServices = ESLintUtils.getParserServices(context);
+        const type = parserServices.getTypeAtLocation(node);
+
+        if (type.flags === ts.TypeFlags.Any) {
+          context.report({
+            node,
+            messageId: 'missingAnyType',
+            fix(fixer) {
+              if (node.object.type === AST_NODE_TYPES.Identifier && node.property.type === AST_NODE_TYPES.Literal) {
+                return fixer.replaceText(node, `(${node.object.name} as any)[${node.property.raw}]`)
+              }
+            },
+          });
+        }
+      }
     };
   },
 });
