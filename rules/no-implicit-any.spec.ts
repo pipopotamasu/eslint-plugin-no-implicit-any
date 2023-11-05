@@ -113,6 +113,19 @@ ruleTester.run(
           foo?.key;
         `,
       },
+      // VariableDeclarator
+      {
+        code: 'const foo;'
+      },
+      {
+        code: 'const foo: any;'
+      },
+      {
+        code: 'let foo: any;'
+      },
+      {
+        code: 'var foo: any;'
+      },
     ],
     invalid: [
       // FunctionDeclaration or FunctionExpression
@@ -150,6 +163,11 @@ ruleTester.run(
       {
         code: 'const foo = arg => {}',
         output: 'const foo = (arg: any) => {}',
+        errors: [{ messageId: 'missingAnyType' }],
+      },
+      {
+        code: 'const foo = async arg => {}',
+        output: 'const foo = async (arg: any) => {}',
         errors: [{ messageId: 'missingAnyType' }],
       },
       {
@@ -255,6 +273,27 @@ ruleTester.run(
           (foo.key.key2 as any)?.key3;
         `,
         errors: [{ messageId: 'missingAnyType' }]
+      },
+      // VariableDeclarator
+      {
+        code: 'let foo;',
+        output: 'let foo: any;',
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: 'let foo, bar;',
+        output: 'let foo: any, bar: any;',
+        errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }]
+      },
+      {
+        code: 'var foo;',
+        output: 'var foo: any;',
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: 'var foo, bar;',
+        output: 'var foo: any, bar: any;',
+        errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }]
       },
     ],
   }
