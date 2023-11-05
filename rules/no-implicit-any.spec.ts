@@ -1,7 +1,6 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
 import { rule } from './no-implicit-any';
 
-RuleTester.afterAll = () => {};
 const ruleTester = new RuleTester({
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -147,6 +146,11 @@ ruleTester.run(
         code: 'const foo = (arg1, arg2) => {}',
         output: 'const foo = (arg1: any, arg2: any) => {}',
         errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+      },
+      {
+        code: 'const foo = arg => {}',
+        output: 'const foo = (arg: any) => {}',
+        errors: [{ messageId: 'missingAnyType' }],
       },
       {
         code: 'const arrayObjArrowFunc = [{ key: (arg1, arg2) => {} }];',
