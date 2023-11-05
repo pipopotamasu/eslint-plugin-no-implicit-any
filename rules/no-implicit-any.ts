@@ -84,6 +84,24 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
           checkArg(context, arg);
         });
       },
+      VariableDeclarator(node) {
+        if (node.id.typeAnnotation || node.parent.type !== AST_NODE_TYPES.VariableDeclaration) return;
+        const kind = node.parent.kind;
+        if (kind !== 'let' && kind !== 'var') return;
+
+        const parserServices = ESLintUtils.getParserServices(context);
+        const type = parserServices.getTypeAtLocation(node);
+
+        if (type.flags === ts.TypeFlags.Any) {
+          context.report({
+            node,
+            messageId: 'missingAnyType',
+            fix(fixer) {
+              return fixer.insertTextAfter(node, ': any');
+            },
+          });
+        }
+      },
       MemberExpression(node) {
         if (node['typeAnnotation']) return;
 
