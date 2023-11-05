@@ -93,7 +93,25 @@ ruleTester.run(
       {
         code: `
           const foo = { key: 'value' };
-          foo['key']
+          foo['key'];
+        `,
+      },
+      {
+        code: `
+          const foo = { key: 'value' };
+          foo?.['key'];
+        `,
+      },
+      {
+        code: `
+          const foo = { key: 'value' };
+          foo.key;
+        `,
+      },
+      {
+        code: `
+          const foo = { key: 'value' };
+          foo?.key;
         `,
       },
     ],
@@ -148,12 +166,89 @@ ruleTester.run(
       // MemberExpression
       {
         code: `
-          const foo = {}
-          foo['key']
+          const foo = {};
+          foo['key'];
         `,
         output: `
-          const foo = {}
-          (foo as any)['key']
+          const foo = {};
+          (foo as any)['key'];
+        `,
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: `
+          const foo = { key: { key2: {} } };
+          foo['key']['key2']['key3'];
+        `,
+        output: `
+          const foo = { key: { key2: {} } };
+          (foo['key']['key2'] as any)['key3'];
+        `,
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: `
+          const foo = {};
+          foo?.['key'];
+        `,
+        output: `
+          const foo = {};
+          (foo as any)?.['key'];
+        `,
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: `
+          const foo = { key: { key2: {} } };
+          foo['key']['key2']?.['key3'];
+        `,
+        output: `
+          const foo = { key: { key2: {} } };
+          (foo['key']['key2'] as any)?.['key3'];
+        `,
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: `
+          const foo = {};
+          foo.key;
+        `,
+        output: `
+          const foo = {};
+          (foo as any).key;
+        `,
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: `
+          const foo = { key: { key2: {} } };
+          foo.key.key2.key3;
+        `,
+        output: `
+          const foo = { key: { key2: {} } };
+          (foo.key.key2 as any).key3;
+        `,
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: `
+          const foo = {};
+          foo?.key;
+        `,
+        output: `
+          const foo = {};
+          (foo as any)?.key;
+        `,
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: `
+          const foo = { key:  { key2: {} } };
+          foo.key.key2?.key3;
+        `,
+        output: `
+          const foo = { key:  { key2: {} } };
+          (foo.key.key2 as any)?.key3;
         `,
         errors: [{ messageId: 'missingAnyType' }]
       },
