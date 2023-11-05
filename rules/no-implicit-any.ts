@@ -13,8 +13,17 @@ function checkArg (context: Readonly<TSESLint.RuleContext<'missingAnyType', any[
     context.report({
       node: arg,
       messageId: 'missingAnyType',
-      fix(fixer) {
-        return fixer.insertTextAfter(arg, ': any');
+      *fix(fixer) {
+        const first = context.getSourceCode().getTokenBefore(arg);
+
+        if (first.value !== '(' && arg.parent['params']?.length === 1) {
+          // ex: arg => (arg: any)
+          yield fixer.insertTextBefore(arg, '(');
+          yield fixer.insertTextAfter(arg, ': any)');
+        } else {
+          // ex: (arg) => (arg: any)
+          yield fixer.insertTextAfter(arg, ': any');
+        }
       },
     });
   } else if (type.flags === ts.TypeFlags.Object) {
