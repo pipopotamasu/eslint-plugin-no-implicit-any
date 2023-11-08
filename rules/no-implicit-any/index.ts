@@ -95,7 +95,3 @@ function hasAnyAnnotationInAncestors(node: TSESTree.MemberExpression) {
     return true;
   return false;
 }
-
-// const foo = {};
-// (foo as any)['key']['key2'];
-// (foo as any).key.key2
