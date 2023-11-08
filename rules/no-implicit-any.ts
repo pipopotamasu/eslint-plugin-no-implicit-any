@@ -103,13 +103,13 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
         }
       },
       MemberExpression(node) {
-        if (node['typeAnnotation']) return;
+        if (!node.computed || hasAnyAnnotationInAncestors(node)) return;
 
         const parserServices = ESLintUtils.getParserServices(context);
-        const type = parserServices.getTypeAtLocation(node);
+        const nodeType = parserServices.getTypeAtLocation(node);
+        const objType = parserServices.getTypeAtLocation(node.object);
 
-
-        if (type.flags === ts.TypeFlags.Any) {
+        if (nodeType.flags === ts.TypeFlags.Any && objType.symbol.escapedName === '__object') {
           context.report({
             node,
             messageId: 'missingAnyType',
@@ -129,3 +129,15 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
     };
   },
 });
+
+function hasAnyAnnotationInAncestors (node: TSESTree.MemberExpression) {
+  if (!node.object) return false;
+  if (!node.object['typeAnnotation']) return hasAnyAnnotationInAncestors(node.object as TSESTree.MemberExpression);
+  if (node.object['typeAnnotation'].type === AST_NODE_TYPES.TSAnyKeyword) return true;
+  return false;
+}
+
+// const foo = {};
+// (foo as any)['key']['key2'];
+// (foo as any).key.key2
+
