@@ -6,7 +6,6 @@ ruleTester.run(
   rule,
   {
     valid: [
-      // MemberExpression
       {
         code: `
           const foo = { key: 'value' };
@@ -93,7 +92,6 @@ ruleTester.run(
       },
     ],
     invalid: [
-      // MemberExpression
       {
         code: `
           const foo = {};

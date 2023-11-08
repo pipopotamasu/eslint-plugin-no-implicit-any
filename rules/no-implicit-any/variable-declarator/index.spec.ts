@@ -1,19 +1,11 @@
-import { RuleTester } from '@typescript-eslint/rule-tester';
-import { rule } from './no-implicit-any';
-
-const ruleTester = new RuleTester({
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: './tsconfig.json',
-  },
-});
+import { ruleTester } from '../../testUtil';
+import { rule } from '../../no-implicit-any';
 
 ruleTester.run(
-  'no-implicit-any',
+  'variable-declarator',
   rule,
   {
     valid: [
-      // VariableDeclarator
       {
         code: 'const foo;'
       },
@@ -28,7 +20,6 @@ ruleTester.run(
       },
     ],
     invalid: [
-      // VariableDeclarator
       {
         code: 'let foo;',
         output: 'let foo: any;',
