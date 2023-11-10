@@ -81,6 +81,8 @@ export const lintArrowFunctionExpression = (
   context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
   node: TSESTree.ArrowFunctionExpression
 ) => {
+  if (node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.typeAnnotation) return;
+
   node.params.forEach((arg) => {
     lintArg(context, arg);
   });
