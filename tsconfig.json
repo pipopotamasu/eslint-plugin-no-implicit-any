@@ -3,7 +3,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "skipLibCheck": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
   },
   "include": ["rules", "file.ts"],
   "exclude": ["node_modules"]

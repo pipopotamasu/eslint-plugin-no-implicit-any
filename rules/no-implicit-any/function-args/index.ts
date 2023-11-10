@@ -87,3 +87,4 @@ export const lintArrowFunctionExpression = (
     lintArg(context, arg);
   });
 };
+
