@@ -68,19 +68,18 @@ ruleTester.run(
           const foo: Foo = (arg1, arg2) => {};
         `,
       },
-      // TODO: These should be passed.
-      // {
-      //   code: `
-      //     type Foo = (arg: any) => void
-      //     const foo: Foo = (arg) => {};
-      //   `,
-      // },
-      // {
-      //   code: `
-      //     type Foo = (arg1: string, arg2: any[]) => void
-      //     const foo: Foo = (arg1, arg2) => {};
-      //   `,
-      // },
+      {
+        code: `
+          type Foo = (arg: any) => void
+          const foo: Foo = (arg) => {};
+        `,
+      },
+      {
+        code: `
+          type Foo = (arg1: string, arg2: any[]) => void
+          const foo: Foo = (arg1, arg2) => {};
+        `,
+      },
     ],
     invalid: [
       // FunctionDeclaration or FunctionExpression
