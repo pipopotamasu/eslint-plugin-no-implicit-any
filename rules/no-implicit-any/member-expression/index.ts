@@ -26,7 +26,7 @@ export const lintMemberExpression = (
 
   if (
     nodeType.flags === ts.TypeFlags.Any &&
-    objType.symbol.escapedName === "__object"
+    objType.symbol?.escapedName === "__object"
   ) {
     context.report({
       node,
