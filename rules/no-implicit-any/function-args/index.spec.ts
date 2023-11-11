@@ -80,6 +80,31 @@ ruleTester.run(
           const foo: Foo = (arg1, arg2) => {};
         `,
       },
+      {
+        code: 'const foo = [...Array(1)].map((i, j) => {});'
+      },
+      {
+        code: `
+          type Obj = {
+            foo: (arg: any) => void;
+          }
+
+          const obj: Obj = {
+            foo: (arg) => {}
+          }
+        `
+      },
+      {
+        code: `
+          type Obj = {
+            foo: (arg: any) => void;
+          }
+
+          const obj: Obj = {
+            foo: function (arg) {}
+          }
+        `
+      },
     ],
     invalid: [
       // FunctionDeclaration or FunctionExpression
