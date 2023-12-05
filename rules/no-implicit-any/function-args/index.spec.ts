@@ -105,6 +105,17 @@ ruleTester.run(
           }
         `
       },
+      {
+        code: `
+          const foo = ({ cb }: { cb: (arg: string) => string }) => {};
+
+          foo({
+            cb: (arg) => {
+              return arg;
+            },
+          });
+        `
+      }
     ],
     invalid: [
       // FunctionDeclaration or FunctionExpression

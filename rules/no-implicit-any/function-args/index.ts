@@ -4,7 +4,9 @@ import { type TSESTree, AST_NODE_TYPES } from "@typescript-eslint/types";
 import * as ts from "typescript";
 
 function hasObjectAnnotationInAncestors(node: TSESTree.Node) {
-  if (node.parent.type === AST_NODE_TYPES.VariableDeclarator) {
+  if (node.parent === null) {
+    return false;
+  } else if (node.parent.type === AST_NODE_TYPES.VariableDeclarator) {
     return node.parent.id.typeAnnotation ? true : false;
   }
 
@@ -94,7 +96,6 @@ export const lintArrowFunctionExpression = (
   context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
   node: TSESTree.ArrowFunctionExpression
 ) => {
-
   if (node.parent.type === AST_NODE_TYPES.CallExpression) return;
   if (node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.typeAnnotation) return;
   if (node.parent.type === AST_NODE_TYPES.Property) {
