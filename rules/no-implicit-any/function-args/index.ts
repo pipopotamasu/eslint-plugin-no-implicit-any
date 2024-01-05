@@ -122,10 +122,3 @@ export const lintArrowFunctionExpression = (
     lintArg(context, arg);
   });
 };
-
-// type Arg = { cb: (arg: any) => void }
-// const foo = ({ cb }: Arg) => {};
-
-// foo({
-//   cb: function (arg) {},
-// });
