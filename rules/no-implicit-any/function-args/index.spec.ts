@@ -115,7 +115,38 @@ ruleTester.run(
             },
           });
         `
-      }
+      },
+      {
+        code: `
+          const foo = ({ cb }: { cb: (arg: string) => string }) => {};
+
+          foo({
+            cb: function (arg) {
+              return arg;
+            },
+          });
+        `
+      },
+      {
+        code: `
+          type Arg = { cb: (arg: any) => void }
+          const foo = ({ cb }: Arg) => {};
+
+          foo({
+            cb: (arg) => {},
+          });
+        `
+      },
+      {
+        code: `
+          type Arg = { cb: (arg: any) => void }
+          const foo = ({ cb }: Arg) => {};
+
+          foo({
+            cb: function (arg) {},
+          });
+        `
+      },
     ],
     invalid: [
       // FunctionDeclaration or FunctionExpression
