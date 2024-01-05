@@ -127,6 +127,26 @@ ruleTester.run(
           });
         `
       },
+      {
+        code: `
+          type Arg = { cb: (arg: any) => void }
+          const foo = ({ cb }: Arg) => {};
+
+          foo({
+            cb: (arg) => {},
+          });
+        `
+      },
+      {
+        code: `
+          type Arg = { cb: (arg: any) => void }
+          const foo = ({ cb }: Arg) => {};
+
+          foo({
+            cb: function (arg) {},
+          });
+        `
+      },
     ],
     invalid: [
       // FunctionDeclaration or FunctionExpression
