@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-no-implicit-any",
   "description": "eslint plugin to detect and format no implicit any",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "keywords": [
