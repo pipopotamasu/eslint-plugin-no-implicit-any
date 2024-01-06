@@ -4,13 +4,18 @@ import { lintFunctionDeclaration, lintFunctionExpression, lintArrowFunctionExpre
 import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
 
-export const rule = ESLintUtils.RuleCreator.withoutDocs({
+const createRule = ESLintUtils.RuleCreator(
+  () => 'https://github.com/pipopotamasu/eslint-plugin-no-implicit-any',
+);
+
+export const rule = createRule({
+  name: 'no-implicit-any',
   defaultOptions: [],
   meta: {
-    type: "problem",
     docs: {
-      description: "test",
+      description: "Disallow implicit any",
     },
+    type: "problem",
     messages: { missingAnyType: "Missing any type" },
     fixable: "code",
     schema: [],
