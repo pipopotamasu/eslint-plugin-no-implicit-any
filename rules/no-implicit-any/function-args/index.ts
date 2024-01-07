@@ -91,7 +91,8 @@ export const lintFunctionExpression = (
     } else if (node.parent.parent.parent.type === AST_NODE_TYPES.CallExpression) {
       const parserServices = ESLintUtils.getParserServices(context);
       const type = parserServices.getTypeAtLocation(node.parent.parent.parent.callee);
-      nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration)
+      nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration);
+      if (!nodeToLint) return;
     };
   }
 
