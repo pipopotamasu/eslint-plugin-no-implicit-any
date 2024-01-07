@@ -16,7 +16,7 @@ export const rule = createRule({
       description: "Disallow implicit any",
     },
     type: "problem",
-    messages: { missingAnyType: "Missing any type" },
+    messages: { missingAnyType: "Detected implicit any. Specify a type." },
     fixable: "code",
     schema: [],
   },
