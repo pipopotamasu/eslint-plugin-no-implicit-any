@@ -36,6 +36,9 @@ ruleTester.run(
         code: 'const foo = (arg1: any, arg2: any) => {}',
       },
       {
+        code: 'const foo = (arg: any = {}) => {};'
+      },
+      {
         code: 'const arrayObjArrowFunc = [{ key: (arg1: any, arg2: any ) => {} }];',
       },
       {
