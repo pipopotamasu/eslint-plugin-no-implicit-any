@@ -15,9 +15,12 @@ function hasObjectTypeAnnotationInAncestors(node: TSESTree.Node) {
 
 function lintArg(
   context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
-  arg: TSESTree.Parameter
+  arg: TSESTree.Parameter | TSESTree.AssignmentPattern
 ) {
   if (arg["typeAnnotation"]) return;
+  if (arg.type === AST_NODE_TYPES.AssignmentPattern && arg.left.typeAnnotation) {
+    return;
+  }
 
   const parserServices = ESLintUtils.getParserServices(context);
   const type = parserServices.getTypeAtLocation(arg);
