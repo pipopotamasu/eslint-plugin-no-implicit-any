@@ -159,6 +159,11 @@ ruleTester.run(
         errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
       },
       {
+        code: 'function foo (arg = null) {}',
+        output: 'function foo (arg: any = null) {}',
+        errors: [{ messageId: 'missingAnyType' }],
+      },
+      {
         code: 'const arrayObjFunc = [{ key: function (arg1, arg2) {} }];',
         output: 'const arrayObjFunc = [{ key: function (arg1: any, arg2: any) {} }];',
         errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
@@ -183,6 +188,11 @@ ruleTester.run(
         code: 'const foo = (arg1, arg2) => {}',
         output: 'const foo = (arg1: any, arg2: any) => {}',
         errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+      },
+      {
+        code: 'const foo = (arg = null) => {}',
+        output: 'const foo = (arg: any = null) => {}',
+        errors: [{ messageId: 'missingAnyType' }],
       },
       {
         code: 'const foo = arg => {}',
