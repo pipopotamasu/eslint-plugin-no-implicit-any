@@ -12,8 +12,6 @@ export const lintVariableDeclarator = (
     node.parent.type !== AST_NODE_TYPES.VariableDeclaration
   )
     return;
-  const kind = node.parent.kind;
-  if (kind !== "let" && kind !== "var") return;
 
   const parserServices = ESLintUtils.getParserServices(context);
   const type = parserServices.getTypeAtLocation(node);
@@ -23,7 +21,7 @@ export const lintVariableDeclarator = (
       node,
       messageId: "missingAnyType",
       fix(fixer) {
-        return fixer.insertTextAfter(node, ": any");
+        return fixer.insertTextAfter(node.id, ": any");
       },
     });
   }

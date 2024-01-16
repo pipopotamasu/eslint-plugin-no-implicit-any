@@ -7,9 +7,6 @@ ruleTester.run(
   {
     valid: [
       {
-        code: 'const foo;'
-      },
-      {
         code: 'const foo: any;'
       },
       {
@@ -20,6 +17,11 @@ ruleTester.run(
       },
     ],
     invalid: [
+      {
+        code: 'const foo;',
+        output: 'const foo: any;',
+        errors: [{ messageId: 'missingAnyType' }]
+      },
       {
         code: 'let foo;',
         output: 'let foo: any;',
@@ -39,6 +41,21 @@ ruleTester.run(
         code: 'var foo, bar;',
         output: 'var foo: any, bar: any;',
         errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }]
+      },
+      {
+        code: 'const foo = null',
+        output: 'const foo: any = null',
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: 'let foo = null',
+        output: 'let foo: any = null',
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: 'var foo = null',
+        output: 'var foo: any = null',
+        errors: [{ messageId: 'missingAnyType' }]
       },
     ],
   }
