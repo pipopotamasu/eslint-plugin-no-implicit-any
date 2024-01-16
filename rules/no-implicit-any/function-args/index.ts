@@ -18,7 +18,16 @@ function lintArg(
   arg: TSESTree.Parameter | TSESTree.AssignmentPattern
 ) {
   if (arg["typeAnnotation"]) return;
-  if (arg.type === AST_NODE_TYPES.AssignmentPattern && arg.left.typeAnnotation) {
+  if (arg.type === AST_NODE_TYPES.AssignmentPattern) {
+    if (!arg.left.typeAnnotation) {
+      context.report({
+        node: arg.left,
+        messageId: "missingAnyType",
+        fix(fixer) {
+          return fixer.insertTextAfter(arg.left, ": any");
+        },
+      });
+    }
     return;
   }
 
