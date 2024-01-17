@@ -3,6 +3,7 @@ import { ESLintUtils } from "@typescript-eslint/utils";
 import { lintFunctionDeclaration, lintFunctionExpression, lintArrowFunctionExpression } from './function-args';
 import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
+import { lintReturnStatement } from './return-statement';
 
 const createRule = ESLintUtils.RuleCreator(
   () => 'https://github.com/pipopotamasu/eslint-plugin-no-implicit-any',
@@ -37,6 +38,10 @@ export const rule = createRule({
       MemberExpression(node) {
         lintMemberExpression(context, node);
       },
+      ReturnStatement(node) {
+        lintReturnStatement(context, node);
+      }
     };
   },
 });
+

@@ -28,5 +28,3 @@ export const lintVariableDeclarator = (
     });
   }
 }
-
-const hoge = { bar: undefined };

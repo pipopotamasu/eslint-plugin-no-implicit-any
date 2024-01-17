@@ -4,6 +4,8 @@
     "moduleResolution": "nodenext",
     "skipLibCheck": true,
     "noImplicitAny": false,
+    // "strictNullChecks": true,
+    // "strict": true
   },
   "include": ["rules", "file.ts"],
   "exclude": ["node_modules"]
