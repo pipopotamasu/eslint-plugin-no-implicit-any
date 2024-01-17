@@ -11,6 +11,9 @@ ruleTester.run(
         code: 'function foo (arg1: any, arg2: any) {}',
       },
       {
+        code: 'function foo (arg = "") {}',
+      },
+      {
         code: 'const arrayObjFunc = [{ key: function (arg1: any, arg2: any) {} }];',
       },
       {
@@ -34,6 +37,9 @@ ruleTester.run(
       // ArrowFunctionExpression
       {
         code: 'const foo = (arg1: any, arg2: any) => {}',
+      },
+      {
+        code: 'const foo = (arg = "") => {};',
       },
       {
         code: 'const foo = (arg: any = {}) => {};'

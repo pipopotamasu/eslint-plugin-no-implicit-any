@@ -18,8 +18,12 @@ function lintArg(
   arg: TSESTree.Parameter | TSESTree.AssignmentPattern
 ) {
   if (arg["typeAnnotation"]) return;
+
+  const parserServices = ESLintUtils.getParserServices(context);
+
   if (arg.type === AST_NODE_TYPES.AssignmentPattern) {
-    if (!arg.left.typeAnnotation) {
+    const type = parserServices.getTypeAtLocation(arg.left);
+    if (!arg.left.typeAnnotation && type.flags === ts.TypeFlags.Any) {
       context.report({
         node: arg.left,
         messageId: "missingAnyType",
@@ -31,7 +35,6 @@ function lintArg(
     return;
   }
 
-  const parserServices = ESLintUtils.getParserServices(context);
   const type = parserServices.getTypeAtLocation(arg);
 
   if (type.flags === ts.TypeFlags.Any) {
