@@ -10,7 +10,7 @@ function hasObjectTypeAnnotationInAncestors(node: TSESTree.Node) {
     return node.parent.id.typeAnnotation ? true : false;
   }
 
-  hasObjectTypeAnnotationInAncestors(node.parent);
+  return hasObjectTypeAnnotationInAncestors(node.parent);
 }
 
 function lintArg(
