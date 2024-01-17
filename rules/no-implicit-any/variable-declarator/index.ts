@@ -9,6 +9,8 @@ export const lintVariableDeclarator = (
 ) => {
   if (
     node.id.typeAnnotation ||
+    node.id.type === AST_NODE_TYPES.ObjectPattern ||
+    node.id.type === AST_NODE_TYPES.ArrayPattern ||
     node.parent.type !== AST_NODE_TYPES.VariableDeclaration
   )
     return;
@@ -26,3 +28,5 @@ export const lintVariableDeclarator = (
     });
   }
 }
+
+const hoge = { bar: undefined };

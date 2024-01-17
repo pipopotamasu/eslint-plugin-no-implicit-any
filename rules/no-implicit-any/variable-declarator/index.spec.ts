@@ -15,6 +15,24 @@ ruleTester.run(
       {
         code: 'var foo: any;'
       },
+      {
+        code: `
+          const foo = () => ({ bar: '1' });
+          const returnValue = foo();
+        `
+      },
+      {
+        code: `
+          const foo = () => ({ bar: '1' });
+          const { bar } = foo();
+        `
+      },
+      {
+        code: `
+          const foo = () => ([1, 2]);
+          const [num1, num2] = foo();
+        `
+      },
     ],
     invalid: [
       {
