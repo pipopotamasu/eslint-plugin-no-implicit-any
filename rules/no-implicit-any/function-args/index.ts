@@ -123,7 +123,6 @@ export const lintArrowFunctionExpression = (
   node: TSESTree.ArrowFunctionExpression
 ) => {
   let nodeToLint = node;
-  if (node.parent.type === AST_NODE_TYPES.CallExpression) return;
   if (node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.typeAnnotation) return;
   if (node.parent.type === AST_NODE_TYPES.Property) {
     const hasObjectAnnotation = hasObjectTypeAnnotationInAncestors(node.parent.parent);
