@@ -90,9 +90,6 @@ ruleTester.run(
         `,
       },
       {
-        code: 'const foo = [...Array(1)].map((i, j) => {});'
-      },
-      {
         code: `
           type Obj = {
             foo: (arg: any) => void;
@@ -223,6 +220,23 @@ ruleTester.run(
       {
         code: 'const foo = ({ arg1, ...rest }) => {}',
         output: 'const foo = ({ arg1, ...rest }: any) => {}',
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      // CallExpression
+      {
+        code: 'const foo = [...Array(1)].map((i, j) => {});',
+        output: 'const foo = [...Array(1)].map((i: any, j) => {});',
+        errors: [{ messageId: 'missingAnyType' }]
+      },
+      {
+        code: `
+          const foo: any = [];
+          foo.map((arg) => {});
+        `,
+        output: `
+          const foo: any = [];
+          foo.map((arg: any) => {});
+        `,
         errors: [{ messageId: 'missingAnyType' }]
       },
     ],
