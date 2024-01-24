@@ -32,7 +32,7 @@ export const lintReturnStatement = (
       node: node,
       messageId: "missingAnyType",
       fix(fixer) {
-        return fixer.insertTextAfter(node, " as any");
+        return fixer.insertTextAfter(node.argument, " as any");
       },
     });
   }

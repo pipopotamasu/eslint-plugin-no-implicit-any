@@ -239,6 +239,17 @@ ruleTester.run(
         `,
         errors: [{ messageId: 'missingAnyType' }]
       },
+      {
+        code: `
+          const foo: any = [];
+          foo.map(arg => {});
+        `,
+        output: `
+          const foo: any = [];
+          foo.map((arg: any) => {});
+        `,
+        errors: [{ messageId: 'missingAnyType' }]
+      },
     ],
   }
 );
