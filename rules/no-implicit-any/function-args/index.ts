@@ -42,9 +42,9 @@ function lintArg(
       node: arg,
       messageId: "missingAnyType",
       *fix(fixer) {
-        const first = context.getSourceCode().getTokenBefore(arg);
+        const after = context.getSourceCode().getTokenAfter(arg);
 
-        if (first.value !== "(" && arg.parent["params"]?.length === 1) {
+        if (arg.parent["params"]?.length === 1 && after.value == "=>") {
           // ex: arg => (arg: any)
           yield fixer.insertTextBefore(arg, "(");
           yield fixer.insertTextAfter(arg, ": any)");
