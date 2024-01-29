@@ -15,6 +15,9 @@ ruleTester.run(
       {
         code: 'const foo: any = () => { return null }'
       },
+      {
+        code: 'const foo = () => { return null as any }'
+      },
     ],
     invalid: [
       {

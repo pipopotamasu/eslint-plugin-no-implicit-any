@@ -19,12 +19,13 @@ export const lintReturnStatement = (
   context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
   node: TSESTree.ReturnStatement
 ) => {
+  if (node.argument["typeAnnotation"]) return;
+
   const parserServices = ESLintUtils.getParserServices(context);
   const { strictNullChecks, strict } = parserServices.program.getCompilerOptions();
   if (strictNullChecks) return;
   if (strictNullChecks === undefined && strict) return;
   if (hasTypeAnnotationInAncestors(node.parent)) return;
-
   const type = parserServices.getTypeAtLocation(node.argument);
 
   if (type.flags === ts.TypeFlags.Any || type.flags === ts.TypeFlags.Null || type.flags === ts.TypeFlags.Undefined) {
