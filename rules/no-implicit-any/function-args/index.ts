@@ -124,6 +124,14 @@ export const lintArrowFunctionExpression = (
 ) => {
   let nodeToLint = node;
   if (node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.typeAnnotation) return;
+  if (node.parent.type === AST_NODE_TYPES.CallExpression) {
+    const parserServices = ESLintUtils.getParserServices(context);
+    const type = parserServices.getTypeAtLocation(node.parent.callee);
+    if (type.symbol && type.symbol.valueDeclaration) {
+      nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration);
+      if (!nodeToLint) return;
+    }
+  }
   if (node.parent.type === AST_NODE_TYPES.Property) {
     const hasObjectAnnotation = hasObjectTypeAnnotationInAncestors(node.parent.parent);
     if (hasObjectAnnotation) {
