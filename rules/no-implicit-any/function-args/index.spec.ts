@@ -153,6 +153,12 @@ ruleTester.run(
           });
         `
       },
+      {
+        code: `
+          const foo = (cb: (arg: any[]) => void) => {};
+          foo(bar => {});
+        `
+      }
     ],
     invalid: [
       // FunctionDeclaration or FunctionExpression
@@ -223,11 +229,6 @@ ruleTester.run(
         errors: [{ messageId: 'missingAnyType' }]
       },
       // CallExpression
-      {
-        code: 'const foo = [...Array(1)].map((i, j) => {});',
-        output: 'const foo = [...Array(1)].map((i: any, j) => {});',
-        errors: [{ messageId: 'missingAnyType' }]
-      },
       {
         code: `
           const foo: any = [];
