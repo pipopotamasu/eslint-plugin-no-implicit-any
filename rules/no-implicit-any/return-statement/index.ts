@@ -19,7 +19,7 @@ export const lintReturnStatement = (
   context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
   node: TSESTree.ReturnStatement
 ) => {
-  if (node.argument["typeAnnotation"]) return;
+  if (!node.argument || node.argument["typeAnnotation"]) return;
 
   const parserServices = ESLintUtils.getParserServices(context);
   const { strictNullChecks, strict } = parserServices.program.getCompilerOptions();

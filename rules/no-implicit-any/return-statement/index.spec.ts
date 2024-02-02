@@ -18,6 +18,17 @@ ruleTester.run(
       {
         code: 'const foo = () => { return null as any }'
       },
+      {
+        code: 'const foo = () => {}'
+      },
+      {
+        code: `
+          const foo = (bool: boolean) => {
+            if (bool) return;
+            return 'bar';
+          }
+        `
+      },
     ],
     invalid: [
       {
