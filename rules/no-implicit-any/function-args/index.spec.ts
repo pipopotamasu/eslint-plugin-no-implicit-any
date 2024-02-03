@@ -158,7 +158,13 @@ ruleTester.run(
           const foo = (cb: (arg: any[]) => void) => {};
           foo(bar => {});
         `
-      }
+      },
+      {
+        code: `
+          const foo = (cb: (arg: any[]) => void) => {};
+          foo(function (bar) {});
+        `
+      },
     ],
     invalid: [
       // FunctionDeclaration or FunctionExpression
