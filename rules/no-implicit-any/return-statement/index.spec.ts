@@ -23,12 +23,44 @@ ruleTester.run(
       },
       {
         code: `
-          const foo = (bool: boolean) => {
-            if (bool) return;
+          const foo = (arg: boolean) => {
+            if (arg) return;
             return 'bar';
           }
         `
       },
+      {
+        code: `
+          const foo = (arg: string) => {
+            switch (arg) {
+              case 'first':
+                return 'first';
+              case 'second': {
+                return 'second';
+              }
+              case 'third and forth':
+                return 'third and forth';
+              default:
+                return null;
+            }
+          }
+        `
+      },
+      {
+        code: `
+          function foo (arg: boolean) {
+            while (true) {
+              if (arg) {
+                return null;
+              } else {
+                break;
+              }
+            }
+
+            return 'bar';
+          }
+        `
+      }
     ],
     invalid: [
       {
