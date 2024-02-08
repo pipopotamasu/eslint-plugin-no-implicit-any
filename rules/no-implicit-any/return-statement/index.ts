@@ -15,6 +15,52 @@ function hasTypeAnnotationInAncestors(node: TSESTree.Node) {
   return hasTypeAnnotationInAncestors(node.parent);
 }
 
+function getFunctionNode (node: TSESTree.Node) {
+  if (node.type === AST_NODE_TYPES.ArrowFunctionExpression || node.type === AST_NODE_TYPES.FunctionExpression || node.type === AST_NODE_TYPES.FunctionDeclaration) return node;
+  return getFunctionNode(node.parent);
+}
+
+function getReturnStatementNode (node: TSESTree.Statement) {
+  switch (node.type) {
+    case AST_NODE_TYPES.IfStatement:
+      return getReturnStatementNode(node.consequent);
+    case AST_NODE_TYPES.ReturnStatement:
+      return node;
+    default:
+      return null;
+  }
+}
+
+function getReturnStatementNodes (nodes: TSESTree.Statement[]) {
+  let returnStatementNodes = [];
+
+  for (let node of nodes) {
+    switch (node.type) {
+      case AST_NODE_TYPES.BlockStatement:
+        returnStatementNodes.push(getReturnStatementNodes(node.body));
+        break;
+      case AST_NODE_TYPES.WhileStatement:
+        returnStatementNodes.push(getReturnStatementNodes([node.body]));
+        break;
+      case AST_NODE_TYPES.SwitchStatement:
+        node.cases.forEach((caseNode) => {
+          returnStatementNodes.push(getReturnStatementNodes(caseNode.consequent));
+        });
+        break;
+      case AST_NODE_TYPES.IfStatement:
+        returnStatementNodes.push(getReturnStatementNode(node.consequent));
+        break;
+      case AST_NODE_TYPES.ReturnStatement:
+        returnStatementNodes.push(node);
+        break;
+    }
+  }
+
+  return returnStatementNodes.flat(Infinity).filter(Boolean);
+}
+
+const TYPES_MAYBE_ANY = [ts.TypeFlags.Any, ts.TypeFlags.Null, ts.TypeFlags.Undefined];
+
 export const lintReturnStatement = (
   context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
   node: TSESTree.ReturnStatement
@@ -26,9 +72,22 @@ export const lintReturnStatement = (
   if (strictNullChecks) return;
   if (strictNullChecks === undefined && strict) return;
   if (hasTypeAnnotationInAncestors(node.parent)) return;
-  const type = parserServices.getTypeAtLocation(node.argument);
 
-  if (type.flags === ts.TypeFlags.Any || type.flags === ts.TypeFlags.Null || type.flags === ts.TypeFlags.Undefined) {
+  const functionNode = getFunctionNode(node.parent);
+  if (functionNode.body.type !== AST_NODE_TYPES.BlockStatement) return;
+  const returnStatementNodes = getReturnStatementNodes(functionNode.body.body);
+
+  let shouldReport = true;
+
+  for (let returnStatementNode of returnStatementNodes) {
+    const type = parserServices.getTypeAtLocation(returnStatementNode.argument);
+    if (!TYPES_MAYBE_ANY.includes(type.flags)) {
+      shouldReport = false;
+      break;
+    }
+  }
+
+  if (shouldReport) {
     context.report({
       node: node,
       messageId: "missingAnyType",
