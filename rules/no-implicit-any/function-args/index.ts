@@ -104,9 +104,12 @@ export const lintFunctionExpression = (
   if (node.parent.type === AST_NODE_TYPES.CallExpression) {
     const parserServices = ESLintUtils.getParserServices(context);
     const type = parserServices.getTypeAtLocation(node.parent.callee);
+
     if (type.symbol && type.symbol.valueDeclaration) {
       nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration);
       if (!nodeToLint) return;
+    } else if (node.parent.callee.type === AST_NODE_TYPES.Identifier) {
+      return;
     }
   }
   if (node.parent.type === AST_NODE_TYPES.Property) {
@@ -139,9 +142,12 @@ export const lintArrowFunctionExpression = (
   if (node.parent.type === AST_NODE_TYPES.CallExpression) {
     const parserServices = ESLintUtils.getParserServices(context);
     const type = parserServices.getTypeAtLocation(node.parent.callee);
+
     if (type.symbol && type.symbol.valueDeclaration) {
       nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration);
       if (!nodeToLint) return;
+    } else if (node.parent.callee.type === AST_NODE_TYPES.Identifier) {
+      return;
     }
   }
   if (node.parent.type === AST_NODE_TYPES.Property) {
