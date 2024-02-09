@@ -31,6 +31,19 @@ ruleTester.run(
       },
       {
         code: `
+          const foo = (arg1: boolean, arg2: boolean) => {
+            if (arg1) {
+              return null;
+            };
+
+            if (arg2) {
+              return 'bar';
+            }
+          }
+        `
+      },
+      {
+        code: `
           const foo = (arg: string) => {
             switch (arg) {
               case 'first':

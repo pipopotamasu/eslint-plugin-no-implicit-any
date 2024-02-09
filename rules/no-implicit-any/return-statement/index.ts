@@ -26,6 +26,8 @@ function getReturnStatementNode (node: TSESTree.Statement) {
       return getReturnStatementNode(node.consequent);
     case AST_NODE_TYPES.ReturnStatement:
       return node;
+    case AST_NODE_TYPES.BlockStatement:
+      return getReturnStatementNodes(node.body);
     default:
       return null;
   }
