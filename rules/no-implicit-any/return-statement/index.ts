@@ -63,6 +63,25 @@ function getReturnStatementNodes (nodes: TSESTree.Statement[]) {
 
 const TYPES_MAYBE_ANY = [ts.TypeFlags.Any, ts.TypeFlags.Null, ts.TypeFlags.Undefined];
 
+function isNullOrUndefined (node: TSESTree.Expression) {
+  if (node.type === AST_NODE_TYPES.Literal) {
+    return node.value === null;
+  } else if (node.type === AST_NODE_TYPES.Identifier) {
+    return node.name === 'undefinied'
+  }
+
+  return false;
+}
+
+function isAllNullOrUndefined (node: TSESTree.LogicalExpression) {
+  const { left, right } = node;
+  if (left.type === AST_NODE_TYPES.LogicalExpression) {
+    return isAllNullOrUndefined(left) && isNullOrUndefined(right);
+  }
+
+  return isNullOrUndefined(left) && isNullOrUndefined(right);
+}
+
 export const lintReturnStatement = (
   context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
   node: TSESTree.ReturnStatement
@@ -82,6 +101,14 @@ export const lintReturnStatement = (
   let shouldReport = true;
 
   for (let returnStatementNode of returnStatementNodes) {
+    if (!returnStatementNode.argument) continue;
+    if (returnStatementNode.argument.type === AST_NODE_TYPES.LogicalExpression) {
+      if (isAllNullOrUndefined(returnStatementNode.argument)) continue;
+
+      shouldReport = false;
+      break;
+    }
+
     const type = parserServices.getTypeAtLocation(returnStatementNode.argument);
     if (!TYPES_MAYBE_ANY.includes(type.flags)) {
       shouldReport = false;
