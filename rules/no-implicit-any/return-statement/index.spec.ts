@@ -77,9 +77,16 @@ ruleTester.run(
       {
         code: `
           const foo = (arg: any) => {
-            return undefinied || null || arg;
+            return undefined || null || arg;
           }
         `,
+      },
+      {
+        code: `
+          const foo = (arg: any) => {
+            return arg?.name;
+          }
+        `
       }
     ],
     invalid: [
@@ -101,12 +108,12 @@ ruleTester.run(
       {
         code: `
           const foo = () => {
-            return undefinied || null || undefinied;
+            return undefined || null || undefined;
           }
         `,
         output: `
           const foo = () => {
-            return undefinied || null || undefinied as any;
+            return undefined || null || undefined as any;
           }
         `,
         errors: [{ messageId: 'missingAnyType' }]
@@ -114,12 +121,12 @@ ruleTester.run(
       {
         code: `
           const foo = () => {
-            return undefinied && null && undefinied;
+            return undefined && null && undefined;
           }
         `,
         output: `
           const foo = () => {
-            return undefinied && null && undefinied as any;
+            return undefined && null && undefined as any;
           }
         `,
         errors: [{ messageId: 'missingAnyType' }]

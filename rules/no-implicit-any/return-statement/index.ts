@@ -61,13 +61,11 @@ function getReturnStatementNodes (nodes: TSESTree.Statement[]) {
   return returnStatementNodes.flat(Infinity).filter(Boolean);
 }
 
-const TYPES_MAYBE_ANY = [ts.TypeFlags.Any, ts.TypeFlags.Null, ts.TypeFlags.Undefined];
-
 function isNullOrUndefined (node: TSESTree.Expression) {
   if (node.type === AST_NODE_TYPES.Literal) {
     return node.value === null;
   } else if (node.type === AST_NODE_TYPES.Identifier) {
-    return node.name === 'undefinied'
+    return node.name === 'undefined'
   }
 
   return false;
@@ -103,14 +101,15 @@ export const lintReturnStatement = (
   for (let returnStatementNode of returnStatementNodes) {
     if (!returnStatementNode.argument) continue;
     if (returnStatementNode.argument.type === AST_NODE_TYPES.LogicalExpression) {
-      if (isAllNullOrUndefined(returnStatementNode.argument)) continue;
+      if (!isAllNullOrUndefined(returnStatementNode.argument)) {
+        shouldReport = false;
+        break;
+      }
 
-      shouldReport = false;
-      break;
+      continue;
     }
 
-    const type = parserServices.getTypeAtLocation(returnStatementNode.argument);
-    if (!TYPES_MAYBE_ANY.includes(type.flags)) {
+    if (!isNullOrUndefined(returnStatementNode.argument)) {
       shouldReport = false;
       break;
     }
@@ -126,3 +125,5 @@ export const lintReturnStatement = (
     });
   }
 }
+
+const foo = () => { return undefined }
