@@ -5,6 +5,10 @@ import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
 import { lintReturnStatement } from './return-statement';
 
+function hasJSExtension (filePath: string) {
+  return /\.(js|jsx|mjs|cjs)$/.test(filePath);
+}
+
 const createRule = ESLintUtils.RuleCreator(
   () => 'https://github.com/pipopotamasu/eslint-plugin-no-implicit-any',
 );
@@ -22,6 +26,8 @@ export const rule = createRule({
     schema: [],
   },
   create: function (context) {
+    if (hasJSExtension(context.getFilename())) return {}
+
     return {
       FunctionDeclaration(node) {
         lintFunctionDeclaration(context, node);
