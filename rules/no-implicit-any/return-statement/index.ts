@@ -125,5 +125,3 @@ export const lintReturnStatement = (
     });
   }
 }
-
-const foo = () => { return undefined }
