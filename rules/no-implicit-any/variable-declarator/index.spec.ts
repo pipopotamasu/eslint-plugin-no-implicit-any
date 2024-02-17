@@ -33,6 +33,18 @@ ruleTester.run(
           const [num1, num2] = foo();
         `
       },
+      {
+        code: `
+          const obj: any = { a: 1, b: 2 }
+          for (const property in obj) {}
+        `
+      },
+      {
+        code: `
+          const arr: any = [1, 2]
+          for (const el of arr) {}
+        `
+      },
     ],
     invalid: [
       {
