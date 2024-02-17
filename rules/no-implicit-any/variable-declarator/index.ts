@@ -11,7 +11,8 @@ export const lintVariableDeclarator = (
     node.id.typeAnnotation ||
     node.id.type === AST_NODE_TYPES.ObjectPattern ||
     node.id.type === AST_NODE_TYPES.ArrayPattern ||
-    node.parent.type !== AST_NODE_TYPES.VariableDeclaration
+    node.parent.type !== AST_NODE_TYPES.VariableDeclaration ||
+    node.parent.parent.type === AST_NODE_TYPES.ForOfStatement
   )
     return;
 
