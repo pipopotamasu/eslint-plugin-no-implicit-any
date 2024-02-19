@@ -1,3 +1,5 @@
+[![CI](https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/actions/workflows/ci.yml/badge.svg)](https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/actions/workflows/ci.yml)
+
 # eslint-plugin-no-implicit-any
 
 typescript-eslint plugin for [noImplicitAny](https://www.typescriptlang.org/tsconfig#noImplicitAny).
@@ -64,6 +66,7 @@ More examples here:
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/function-args/index.spec.ts
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/member-expression/index.spec.ts
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/variable-declarator/index.spec.ts
+- https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/return-statement/index.spec.ts
 
 ## License
 
