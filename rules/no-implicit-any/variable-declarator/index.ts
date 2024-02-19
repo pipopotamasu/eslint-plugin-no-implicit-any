@@ -1,10 +1,10 @@
-import { ESLintUtils, type TSESLint } from "@typescript-eslint/utils";
-import { type TSESTree, AST_NODE_TYPES } from "@typescript-eslint/types";
+import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
+import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 
-import * as ts from "typescript";
+import * as ts from 'typescript';
 
 export const lintVariableDeclarator = (
-  context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
+  context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.VariableDeclarator
 ) => {
   if (
@@ -22,10 +22,10 @@ export const lintVariableDeclarator = (
   if (type.flags === ts.TypeFlags.Any) {
     context.report({
       node,
-      messageId: "missingAnyType",
+      messageId: 'missingAnyType',
       fix(fixer) {
-        return fixer.insertTextAfter(node.id, ": any");
+        return fixer.insertTextAfter(node.id, ': any');
       },
     });
   }
-}
+};

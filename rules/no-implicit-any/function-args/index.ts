@@ -1,7 +1,7 @@
-import { ESLintUtils, type TSESLint } from "@typescript-eslint/utils";
-import { type TSESTree, AST_NODE_TYPES } from "@typescript-eslint/types";
+import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
+import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 
-import * as ts from "typescript";
+import * as ts from 'typescript';
 
 function hasObjectTypeAnnotationInAncestors(node: TSESTree.Node) {
   if (node.parent === null) {
@@ -14,10 +14,10 @@ function hasObjectTypeAnnotationInAncestors(node: TSESTree.Node) {
 }
 
 function lintArg(
-  context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
+  context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   arg: TSESTree.Parameter | TSESTree.AssignmentPattern
 ) {
-  if (arg["typeAnnotation"]) return;
+  if (arg['typeAnnotation']) return;
 
   const parserServices = ESLintUtils.getParserServices(context);
 
@@ -26,9 +26,9 @@ function lintArg(
     if (!arg.left.typeAnnotation && type.flags === ts.TypeFlags.Any) {
       context.report({
         node: arg.left,
-        messageId: "missingAnyType",
+        messageId: 'missingAnyType',
         fix(fixer) {
-          return fixer.insertTextAfter(arg.left, ": any");
+          return fixer.insertTextAfter(arg.left, ': any');
         },
       });
     }
@@ -40,17 +40,17 @@ function lintArg(
   if (type.flags === ts.TypeFlags.Any) {
     context.report({
       node: arg,
-      messageId: "missingAnyType",
+      messageId: 'missingAnyType',
       *fix(fixer) {
         const after = context.getSourceCode().getTokenAfter(arg);
 
-        if (arg.parent["params"]?.length === 1 && after.value == "=>") {
+        if (arg.parent['params']?.length === 1 && after.value == '=>') {
           // ex: arg => (arg: any)
-          yield fixer.insertTextBefore(arg, "(");
-          yield fixer.insertTextAfter(arg, ": any)");
+          yield fixer.insertTextBefore(arg, '(');
+          yield fixer.insertTextAfter(arg, ': any)');
         } else {
           // ex: (arg) => (arg: any)
-          yield fixer.insertTextAfter(arg, ": any");
+          yield fixer.insertTextAfter(arg, ': any');
         }
       },
     });
@@ -58,26 +58,26 @@ function lintArg(
     if (arg.type === AST_NODE_TYPES.ObjectPattern) {
       arg.properties.forEach((property) => {
         if (property.type === AST_NODE_TYPES.Property) {
-          if (!property.key["typeAnnotation"]) {
+          if (!property.key['typeAnnotation']) {
             const type = parserServices.getTypeAtLocation(property);
             if (type.flags === ts.TypeFlags.Any) {
               context.report({
                 node: arg,
-                messageId: "missingAnyType",
+                messageId: 'missingAnyType',
                 fix(fixer) {
-                  return fixer.insertTextAfter(arg, ": any");
+                  return fixer.insertTextAfter(arg, ': any');
                 },
               });
             }
           }
         }
       });
-    } else if (type.symbol?.escapedName === "Array") {
+    } else if (type.symbol?.escapedName === 'Array') {
       context.report({
         node: arg,
-        messageId: "missingAnyType",
+        messageId: 'missingAnyType',
         fix(fixer) {
-          return fixer.insertTextAfter(arg, ": any[]");
+          return fixer.insertTextAfter(arg, ': any[]');
         },
       });
     }
@@ -85,7 +85,7 @@ function lintArg(
 }
 
 export const lintFunctionDeclaration = (
-  context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
+  context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.FunctionDeclaration
 ) => {
   node.params.forEach((arg) => {
@@ -94,7 +94,7 @@ export const lintFunctionDeclaration = (
 };
 
 export const lintFunctionExpression = (
-  context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
+  context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.FunctionExpression
 ) => {
   let nodeToLint = node;
@@ -123,7 +123,7 @@ export const lintFunctionExpression = (
         nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration);
         if (!nodeToLint) return;
       }
-    };
+    }
   }
 
   nodeToLint.params.forEach((arg) => {
@@ -132,11 +132,12 @@ export const lintFunctionExpression = (
 };
 
 export const lintArrowFunctionExpression = (
-  context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
+  context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.ArrowFunctionExpression
 ) => {
   let nodeToLint = node;
-  if (node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.typeAnnotation) return;
+  if (node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.typeAnnotation)
+    return;
   // For react component props
   if (node.parent.type === AST_NODE_TYPES.JSXExpressionContainer) return;
   if (node.parent.type === AST_NODE_TYPES.CallExpression) {
@@ -161,7 +162,7 @@ export const lintArrowFunctionExpression = (
         nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration);
         if (!nodeToLint) return;
       }
-    };
+    }
   }
 
   nodeToLint.params.forEach((arg) => {

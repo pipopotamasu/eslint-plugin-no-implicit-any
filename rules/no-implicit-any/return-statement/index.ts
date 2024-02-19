@@ -1,12 +1,13 @@
-import { ESLintUtils, type TSESLint } from "@typescript-eslint/utils";
-import { type TSESTree, AST_NODE_TYPES } from "@typescript-eslint/types";
-
-import * as ts from "typescript";
+import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
+import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 
 function hasTypeAnnotationInAncestors(node: TSESTree.Node) {
   if (node === null) {
     return false;
-  } else if (node.type === AST_NODE_TYPES.ArrowFunctionExpression || node.type === AST_NODE_TYPES.FunctionExpression) {
+  } else if (
+    node.type === AST_NODE_TYPES.ArrowFunctionExpression ||
+    node.type === AST_NODE_TYPES.FunctionExpression
+  ) {
     if (node.returnType) return true;
   } else if (node.type === AST_NODE_TYPES.VariableDeclarator) {
     if (node.id.typeAnnotation) return true;
@@ -15,12 +16,17 @@ function hasTypeAnnotationInAncestors(node: TSESTree.Node) {
   return hasTypeAnnotationInAncestors(node.parent);
 }
 
-function getFunctionNode (node: TSESTree.Node) {
-  if (node.type === AST_NODE_TYPES.ArrowFunctionExpression || node.type === AST_NODE_TYPES.FunctionExpression || node.type === AST_NODE_TYPES.FunctionDeclaration) return node;
+function getFunctionNode(node: TSESTree.Node) {
+  if (
+    node.type === AST_NODE_TYPES.ArrowFunctionExpression ||
+    node.type === AST_NODE_TYPES.FunctionExpression ||
+    node.type === AST_NODE_TYPES.FunctionDeclaration
+  )
+    return node;
   return getFunctionNode(node.parent);
 }
 
-function getReturnStatementNode (node: TSESTree.Statement) {
+function getReturnStatementNode(node: TSESTree.Statement) {
   switch (node.type) {
     case AST_NODE_TYPES.IfStatement:
       return getReturnStatementNode(node.consequent);
@@ -33,10 +39,10 @@ function getReturnStatementNode (node: TSESTree.Statement) {
   }
 }
 
-function getReturnStatementNodes (nodes: TSESTree.Statement[]) {
-  let returnStatementNodes = [];
+function getReturnStatementNodes(nodes: TSESTree.Statement[]) {
+  const returnStatementNodes = [];
 
-  for (let node of nodes) {
+  for (const node of nodes) {
     switch (node.type) {
       case AST_NODE_TYPES.BlockStatement:
         returnStatementNodes.push(getReturnStatementNodes(node.body));
@@ -61,17 +67,17 @@ function getReturnStatementNodes (nodes: TSESTree.Statement[]) {
   return returnStatementNodes.flat(Infinity).filter(Boolean);
 }
 
-function isNullOrUndefined (node: TSESTree.Expression) {
+function isNullOrUndefined(node: TSESTree.Expression) {
   if (node.type === AST_NODE_TYPES.Literal) {
     return node.value === null;
   } else if (node.type === AST_NODE_TYPES.Identifier) {
-    return node.name === 'undefined'
+    return node.name === 'undefined';
   }
 
   return false;
 }
 
-function isAllNullOrUndefined (node: TSESTree.LogicalExpression) {
+function isAllNullOrUndefined(node: TSESTree.LogicalExpression) {
   const { left, right } = node;
   if (left.type === AST_NODE_TYPES.LogicalExpression) {
     return isAllNullOrUndefined(left) && isNullOrUndefined(right);
@@ -81,10 +87,10 @@ function isAllNullOrUndefined (node: TSESTree.LogicalExpression) {
 }
 
 export const lintReturnStatement = (
-  context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
+  context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.ReturnStatement
 ) => {
-  if (!node.argument || node.argument["typeAnnotation"]) return;
+  if (!node.argument || node.argument['typeAnnotation']) return;
 
   const parserServices = ESLintUtils.getParserServices(context);
   const { strictNullChecks, strict } = parserServices.program.getCompilerOptions();
@@ -98,7 +104,7 @@ export const lintReturnStatement = (
 
   let shouldReport = true;
 
-  for (let returnStatementNode of returnStatementNodes) {
+  for (const returnStatementNode of returnStatementNodes) {
     if (!returnStatementNode.argument) continue;
     if (returnStatementNode.argument.type === AST_NODE_TYPES.LogicalExpression) {
       if (!isAllNullOrUndefined(returnStatementNode.argument)) {
@@ -118,10 +124,10 @@ export const lintReturnStatement = (
   if (shouldReport) {
     context.report({
       node: node,
-      messageId: "missingAnyType",
+      messageId: 'missingAnyType',
       fix(fixer) {
-        return fixer.insertTextAfter(node.argument, " as any");
+        return fixer.insertTextAfter(node.argument, ' as any');
       },
     });
   }
-}
+};

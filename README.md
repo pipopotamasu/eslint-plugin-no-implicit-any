@@ -44,7 +44,7 @@ const foo = (...args) => {};
 const foo = { key: (arg) => {} };
 
 const foo = {};
-foo["key"];
+foo['key'];
 ```
 
 Examples of correct code for this rule:
@@ -56,9 +56,9 @@ const foo = (...args: any[]) => {};
 
 const foo = { key: (arg: any) => {} };
 
-const foo = { key: "value" };
+const foo = { key: 'value' };
 
-(foo as any)["key"];
+(foo as any)['key'];
 ```
 
 More examples here:

@@ -1,36 +1,33 @@
 import { ruleTester } from '../../testUtil';
 import { rule } from '../../no-implicit-any';
 
-ruleTester.run(
-  'return-statement',
-  rule,
-  {
-    valid: [
-      {
-        code: 'const foo = () => { return 1 }'
-      },
-      {
-        code: 'const foo = (): any => { return null }'
-      },
-      {
-        code: 'const foo: any = () => { return null }'
-      },
-      {
-        code: 'const foo = () => { return null as any }'
-      },
-      {
-        code: 'const foo = () => {}'
-      },
-      {
-        code: `
+ruleTester.run('return-statement', rule, {
+  valid: [
+    {
+      code: 'const foo = () => { return 1 }',
+    },
+    {
+      code: 'const foo = (): any => { return null }',
+    },
+    {
+      code: 'const foo: any = () => { return null }',
+    },
+    {
+      code: 'const foo = () => { return null as any }',
+    },
+    {
+      code: 'const foo = () => {}',
+    },
+    {
+      code: `
           const foo = (arg: boolean) => {
             if (arg) return;
             return 'bar';
           }
-        `
-      },
-      {
-        code: `
+        `,
+    },
+    {
+      code: `
           const foo = (arg1: boolean, arg2: boolean) => {
             if (arg1) {
               return null;
@@ -40,10 +37,10 @@ ruleTester.run(
               return 'bar';
             }
           }
-        `
-      },
-      {
-        code: `
+        `,
+    },
+    {
+      code: `
           const foo = (arg: string) => {
             switch (arg) {
               case 'first':
@@ -57,10 +54,10 @@ ruleTester.run(
                 return null;
             }
           }
-        `
-      },
-      {
-        code: `
+        `,
+    },
+    {
+      code: `
           function foo (arg: boolean) {
             while (true) {
               if (arg) {
@@ -72,65 +69,64 @@ ruleTester.run(
 
             return 'bar';
           }
-        `
-      },
-      {
-        code: `
+        `,
+    },
+    {
+      code: `
           const foo = (arg: any) => {
             return undefined || null || arg;
           }
         `,
-      },
-      {
-        code: `
+    },
+    {
+      code: `
           const foo = (arg: any) => {
             return arg?.name;
           }
-        `
-      }
-    ],
-    invalid: [
-      {
-        code: 'const foo = () => { return null }',
-        output: 'const foo = () => { return null as any }',
-        errors: [{ messageId: 'missingAnyType' }]
-      },
-      {
-        code: 'const foo = () => { return null; }',
-        output: 'const foo = () => { return null as any; }',
-        errors: [{ messageId: 'missingAnyType' }]
-      },
-      {
-        code: 'const foo = () => { return undefined }',
-        output: 'const foo = () => { return undefined as any }',
-        errors: [{ messageId: 'missingAnyType' }]
-      },
-      {
-        code: `
+        `,
+    },
+  ],
+  invalid: [
+    {
+      code: 'const foo = () => { return null }',
+      output: 'const foo = () => { return null as any }',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'const foo = () => { return null; }',
+      output: 'const foo = () => { return null as any; }',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'const foo = () => { return undefined }',
+      output: 'const foo = () => { return undefined as any }',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: `
           const foo = () => {
             return undefined || null || undefined;
           }
         `,
-        output: `
+      output: `
           const foo = () => {
             return undefined || null || undefined as any;
           }
         `,
-        errors: [{ messageId: 'missingAnyType' }]
-      },
-      {
-        code: `
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: `
           const foo = () => {
             return undefined && null && undefined;
           }
         `,
-        output: `
+      output: `
           const foo = () => {
             return undefined && null && undefined as any;
           }
         `,
-        errors: [{ messageId: 'missingAnyType' }]
-      }
-    ],
-  }
-);
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+  ],
+});
