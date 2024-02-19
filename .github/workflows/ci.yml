@@ -16,7 +16,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install
-      # - run: yarn prettier:check
+      - run: yarn prettier:check
       - run: yarn eslint
       - run: yarn test
       - run: yarn build

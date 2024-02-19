@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: ['rules/index.ts'],
@@ -8,8 +8,5 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   dts: true,
-  format: [
-    "cjs",
-    "esm"
-  ],
+  format: ['cjs', 'esm'],
 });

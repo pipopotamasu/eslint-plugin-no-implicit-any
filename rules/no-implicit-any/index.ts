@@ -1,16 +1,20 @@
 import { ESLintUtils } from '@typescript-eslint/utils';
 
-import { lintFunctionDeclaration, lintFunctionExpression, lintArrowFunctionExpression } from './function-args';
+import {
+  lintFunctionDeclaration,
+  lintFunctionExpression,
+  lintArrowFunctionExpression,
+} from './function-args';
 import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
 import { lintReturnStatement } from './return-statement';
 
-function hasJSExtension (filePath: string) {
+function hasJSExtension(filePath: string) {
   return /\.(js|jsx|mjs|cjs)$/.test(filePath);
 }
 
 const createRule = ESLintUtils.RuleCreator(
-  () => 'https://github.com/pipopotamasu/eslint-plugin-no-implicit-any',
+  () => 'https://github.com/pipopotamasu/eslint-plugin-no-implicit-any'
 );
 
 export const rule = createRule({
@@ -46,8 +50,7 @@ export const rule = createRule({
       },
       ReturnStatement(node) {
         lintReturnStatement(context, node);
-      }
+      },
     };
   },
 });
-

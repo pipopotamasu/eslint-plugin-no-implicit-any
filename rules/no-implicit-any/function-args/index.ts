@@ -123,7 +123,7 @@ export const lintFunctionExpression = (
         nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration);
         if (!nodeToLint) return;
       }
-    };
+    }
   }
 
   nodeToLint.params.forEach((arg) => {
@@ -136,7 +136,8 @@ export const lintArrowFunctionExpression = (
   node: TSESTree.ArrowFunctionExpression
 ) => {
   let nodeToLint = node;
-  if (node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.typeAnnotation) return;
+  if (node.parent.type === AST_NODE_TYPES.VariableDeclarator && node.parent.id.typeAnnotation)
+    return;
   // For react component props
   if (node.parent.type === AST_NODE_TYPES.JSXExpressionContainer) return;
   if (node.parent.type === AST_NODE_TYPES.CallExpression) {
@@ -161,7 +162,7 @@ export const lintArrowFunctionExpression = (
         nodeToLint = parserServices.tsNodeToESTreeNodeMap.get(type.symbol.valueDeclaration);
         if (!nodeToLint) return;
       }
-    };
+    }
   }
 
   nodeToLint.params.forEach((arg) => {

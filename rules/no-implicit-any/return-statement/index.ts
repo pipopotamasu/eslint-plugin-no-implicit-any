@@ -4,7 +4,10 @@ import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 function hasTypeAnnotationInAncestors(node: TSESTree.Node) {
   if (node === null) {
     return false;
-  } else if (node.type === AST_NODE_TYPES.ArrowFunctionExpression || node.type === AST_NODE_TYPES.FunctionExpression) {
+  } else if (
+    node.type === AST_NODE_TYPES.ArrowFunctionExpression ||
+    node.type === AST_NODE_TYPES.FunctionExpression
+  ) {
     if (node.returnType) return true;
   } else if (node.type === AST_NODE_TYPES.VariableDeclarator) {
     if (node.id.typeAnnotation) return true;
@@ -13,12 +16,17 @@ function hasTypeAnnotationInAncestors(node: TSESTree.Node) {
   return hasTypeAnnotationInAncestors(node.parent);
 }
 
-function getFunctionNode (node: TSESTree.Node) {
-  if (node.type === AST_NODE_TYPES.ArrowFunctionExpression || node.type === AST_NODE_TYPES.FunctionExpression || node.type === AST_NODE_TYPES.FunctionDeclaration) return node;
+function getFunctionNode(node: TSESTree.Node) {
+  if (
+    node.type === AST_NODE_TYPES.ArrowFunctionExpression ||
+    node.type === AST_NODE_TYPES.FunctionExpression ||
+    node.type === AST_NODE_TYPES.FunctionDeclaration
+  )
+    return node;
   return getFunctionNode(node.parent);
 }
 
-function getReturnStatementNode (node: TSESTree.Statement) {
+function getReturnStatementNode(node: TSESTree.Statement) {
   switch (node.type) {
     case AST_NODE_TYPES.IfStatement:
       return getReturnStatementNode(node.consequent);
@@ -31,7 +39,7 @@ function getReturnStatementNode (node: TSESTree.Statement) {
   }
 }
 
-function getReturnStatementNodes (nodes: TSESTree.Statement[]) {
+function getReturnStatementNodes(nodes: TSESTree.Statement[]) {
   const returnStatementNodes = [];
 
   for (const node of nodes) {
@@ -59,7 +67,7 @@ function getReturnStatementNodes (nodes: TSESTree.Statement[]) {
   return returnStatementNodes.flat(Infinity).filter(Boolean);
 }
 
-function isNullOrUndefined (node: TSESTree.Expression) {
+function isNullOrUndefined(node: TSESTree.Expression) {
   if (node.type === AST_NODE_TYPES.Literal) {
     return node.value === null;
   } else if (node.type === AST_NODE_TYPES.Identifier) {
@@ -69,7 +77,7 @@ function isNullOrUndefined (node: TSESTree.Expression) {
   return false;
 }
 
-function isAllNullOrUndefined (node: TSESTree.LogicalExpression) {
+function isAllNullOrUndefined(node: TSESTree.LogicalExpression) {
   const { left, right } = node;
   if (left.type === AST_NODE_TYPES.LogicalExpression) {
     return isAllNullOrUndefined(left) && isNullOrUndefined(right);
