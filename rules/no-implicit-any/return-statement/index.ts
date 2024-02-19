@@ -1,7 +1,5 @@
-import { ESLintUtils, type TSESLint } from "@typescript-eslint/utils";
-import { type TSESTree, AST_NODE_TYPES } from "@typescript-eslint/types";
-
-import * as ts from "typescript";
+import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
+import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 
 function hasTypeAnnotationInAncestors(node: TSESTree.Node) {
   if (node === null) {
@@ -34,9 +32,9 @@ function getReturnStatementNode (node: TSESTree.Statement) {
 }
 
 function getReturnStatementNodes (nodes: TSESTree.Statement[]) {
-  let returnStatementNodes = [];
+  const returnStatementNodes = [];
 
-  for (let node of nodes) {
+  for (const node of nodes) {
     switch (node.type) {
       case AST_NODE_TYPES.BlockStatement:
         returnStatementNodes.push(getReturnStatementNodes(node.body));
@@ -65,7 +63,7 @@ function isNullOrUndefined (node: TSESTree.Expression) {
   if (node.type === AST_NODE_TYPES.Literal) {
     return node.value === null;
   } else if (node.type === AST_NODE_TYPES.Identifier) {
-    return node.name === 'undefined'
+    return node.name === 'undefined';
   }
 
   return false;
@@ -81,10 +79,10 @@ function isAllNullOrUndefined (node: TSESTree.LogicalExpression) {
 }
 
 export const lintReturnStatement = (
-  context: Readonly<TSESLint.RuleContext<"missingAnyType", any[]>>,
+  context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.ReturnStatement
 ) => {
-  if (!node.argument || node.argument["typeAnnotation"]) return;
+  if (!node.argument || node.argument['typeAnnotation']) return;
 
   const parserServices = ESLintUtils.getParserServices(context);
   const { strictNullChecks, strict } = parserServices.program.getCompilerOptions();
@@ -98,7 +96,7 @@ export const lintReturnStatement = (
 
   let shouldReport = true;
 
-  for (let returnStatementNode of returnStatementNodes) {
+  for (const returnStatementNode of returnStatementNodes) {
     if (!returnStatementNode.argument) continue;
     if (returnStatementNode.argument.type === AST_NODE_TYPES.LogicalExpression) {
       if (!isAllNullOrUndefined(returnStatementNode.argument)) {
@@ -118,10 +116,10 @@ export const lintReturnStatement = (
   if (shouldReport) {
     context.report({
       node: node,
-      messageId: "missingAnyType",
+      messageId: 'missingAnyType',
       fix(fixer) {
-        return fixer.insertTextAfter(node.argument, " as any");
+        return fixer.insertTextAfter(node.argument, ' as any');
       },
     });
   }
-}
+};

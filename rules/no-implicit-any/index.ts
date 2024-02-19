@@ -1,4 +1,4 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
+import { ESLintUtils } from '@typescript-eslint/utils';
 
 import { lintFunctionDeclaration, lintFunctionExpression, lintArrowFunctionExpression } from './function-args';
 import { lintMemberExpression } from './member-expression';
@@ -18,22 +18,22 @@ export const rule = createRule({
   defaultOptions: [],
   meta: {
     docs: {
-      description: "Disallow implicit any",
+      description: 'Disallow implicit any',
     },
-    type: "problem",
-    messages: { missingAnyType: "Detected implicit any. Specify a type." },
-    fixable: "code",
+    type: 'problem',
+    messages: { missingAnyType: 'Detected implicit any. Specify a type.' },
+    fixable: 'code',
     schema: [],
   },
   create: function (context) {
-    if (hasJSExtension(context.getFilename())) return {}
+    if (hasJSExtension(context.getFilename())) return {};
 
     return {
       FunctionDeclaration(node) {
         lintFunctionDeclaration(context, node);
       },
       FunctionExpression(node) {
-        lintFunctionExpression(context, node)
+        lintFunctionExpression(context, node);
       },
       ArrowFunctionExpression(node) {
         lintArrowFunctionExpression(context, node);
