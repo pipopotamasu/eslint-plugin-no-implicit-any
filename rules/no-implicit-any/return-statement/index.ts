@@ -1,5 +1,6 @@
 import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
 import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
+import { isNullOrUndefinedOrVoid, enabledStrictNullChecks } from '../../helper';
 
 function hasTypeAnnotationInAncestors(node: TSESTree.Node) {
   if (node === null) {
@@ -67,23 +68,13 @@ function getReturnStatementNodes(nodes: TSESTree.Statement[]) {
   return returnStatementNodes.flat(Infinity).filter(Boolean);
 }
 
-function isNullOrUndefined(node: TSESTree.Expression) {
-  if (node.type === AST_NODE_TYPES.Literal) {
-    return node.value === null;
-  } else if (node.type === AST_NODE_TYPES.Identifier) {
-    return node.name === 'undefined';
-  }
-
-  return false;
-}
-
-function isAllNullOrUndefined(node: TSESTree.LogicalExpression) {
+function isAllNullOrUndefinedOrVoid(node: TSESTree.LogicalExpression) {
   const { left, right } = node;
   if (left.type === AST_NODE_TYPES.LogicalExpression) {
-    return isAllNullOrUndefined(left) && isNullOrUndefined(right);
+    return isAllNullOrUndefinedOrVoid(left) && isNullOrUndefinedOrVoid(right);
   }
 
-  return isNullOrUndefined(left) && isNullOrUndefined(right);
+  return isNullOrUndefinedOrVoid(left) && isNullOrUndefinedOrVoid(right);
 }
 
 export const lintReturnStatement = (
@@ -93,9 +84,7 @@ export const lintReturnStatement = (
   if (!node.argument || node.argument['typeAnnotation']) return;
 
   const parserServices = ESLintUtils.getParserServices(context);
-  const { strictNullChecks, strict } = parserServices.program.getCompilerOptions();
-  if (strictNullChecks) return;
-  if (strictNullChecks === undefined && strict) return;
+  if (enabledStrictNullChecks(parserServices.program.getCompilerOptions())) return;
   if (hasTypeAnnotationInAncestors(node.parent)) return;
 
   const functionNode = getFunctionNode(node.parent);
@@ -107,7 +96,7 @@ export const lintReturnStatement = (
   for (const returnStatementNode of returnStatementNodes) {
     if (!returnStatementNode.argument) continue;
     if (returnStatementNode.argument.type === AST_NODE_TYPES.LogicalExpression) {
-      if (!isAllNullOrUndefined(returnStatementNode.argument)) {
+      if (!isAllNullOrUndefinedOrVoid(returnStatementNode.argument)) {
         shouldReport = false;
         break;
       }
@@ -115,7 +104,7 @@ export const lintReturnStatement = (
       continue;
     }
 
-    if (!isNullOrUndefined(returnStatementNode.argument)) {
+    if (!isNullOrUndefinedOrVoid(returnStatementNode.argument)) {
       shouldReport = false;
       break;
     }

@@ -1,7 +1,6 @@
 import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
 import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
-
-import * as ts from 'typescript';
+import { isNullOrUndefinedOrVoid, enabledStrictNullChecks } from '../../helper';
 
 export const lintVariableDeclarator = (
   context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
@@ -9,18 +8,26 @@ export const lintVariableDeclarator = (
 ) => {
   if (
     node.id.typeAnnotation ||
-    node.id.type === AST_NODE_TYPES.ObjectPattern ||
-    node.id.type === AST_NODE_TYPES.ArrayPattern ||
-    node.init?.type === AST_NODE_TYPES.CallExpression ||
-    node.parent.type !== AST_NODE_TYPES.VariableDeclaration ||
-    node.parent.parent.type === AST_NODE_TYPES.ForOfStatement
+    node.parent.parent.type === AST_NODE_TYPES.ForOfStatement ||
+    node.parent.parent.type === AST_NODE_TYPES.ForInStatement ||
+    (node.parent.type === AST_NODE_TYPES.VariableDeclaration && node.parent.kind !== 'const')
   )
     return;
 
-  const parserServices = ESLintUtils.getParserServices(context);
-  const type = parserServices.getTypeAtLocation(node);
+  if (node.init === null) {
+    return context.report({
+      node,
+      messageId: 'missingAnyType',
+      fix(fixer) {
+        return fixer.insertTextAfter(node.id, ': any');
+      },
+    });
+  }
 
-  if (type.flags === ts.TypeFlags.Any) {
+  const parserServices = ESLintUtils.getParserServices(context);
+  if (enabledStrictNullChecks(parserServices.program.getCompilerOptions())) return;
+
+  if (isNullOrUndefinedOrVoid(node.init)) {
     context.report({
       node,
       messageId: 'missingAnyType',
