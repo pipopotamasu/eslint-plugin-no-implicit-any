@@ -26,6 +26,12 @@ ruleTester.run('variable-declarator', rule, {
     },
     {
       code: `
+          const foo = (): any => 'test';
+          const val = foo();
+        `,
+    },
+    {
+      code: `
           const foo = () => ([1, 2]);
           const [num1, num2] = foo();
         `,
