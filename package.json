@@ -28,7 +28,8 @@
     "eslint": "eslint \"rules/**/*.{ts,tsx}\"",
     "eslint:fix": "eslint \"rules/**/*.{ts,tsx}\" --fix",
     "prettier:write": "prettier --write .",
-    "prettier:check": "prettier --check ."
+    "prettier:check": "prettier --check .",
+    "fix": "npm run eslint:fix && npm run prettier:write"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^6.9.1",

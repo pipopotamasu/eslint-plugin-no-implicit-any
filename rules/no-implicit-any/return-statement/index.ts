@@ -58,6 +58,7 @@ function getReturnStatementNodes(nodes: TSESTree.Statement[]) {
         break;
       case AST_NODE_TYPES.IfStatement:
         returnStatementNodes.push(getReturnStatementNode(node.consequent));
+        if (node.alternate) returnStatementNodes.push(getReturnStatementNode(node.alternate));
         break;
       case AST_NODE_TYPES.ReturnStatement:
         returnStatementNodes.push(node);

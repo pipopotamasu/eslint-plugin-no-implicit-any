@@ -85,6 +85,20 @@ ruleTester.run('return-statement', rule, {
           }
         `,
     },
+    {
+      code: `
+        const fn = (): any => {}
+        const foo = (hoge?: () => void, arg?: any) => {
+          if (hoge) {
+            hoge();
+          } else if (arg) {
+            return fn() + arg;
+          } else {
+            return fn();
+          }
+        }
+      `,
+    },
   ],
   invalid: [
     {
