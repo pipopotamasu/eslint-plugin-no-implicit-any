@@ -133,5 +133,20 @@ ruleTester.run('member-expression', rule, {
         `,
       errors: [{ messageId: 'missingAnyType' }],
     },
+    {
+      code: `
+        function fn (arg: { foo: string }) {
+          const keyName: string = 'bar';
+          arg[keyName];
+        }
+        `,
+      output: `
+        function fn (arg: { foo: string }) {
+          const keyName: string = 'bar';
+          (arg as any)[keyName];
+        }
+        `,
+      errors: [{ messageId: 'missingAnyType' }],
+    },
   ],
 });
