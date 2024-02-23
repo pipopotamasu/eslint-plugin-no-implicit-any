@@ -9,8 +9,7 @@ export const lintVariableDeclarator = (
   if (
     node.id.typeAnnotation ||
     node.parent.parent.type === AST_NODE_TYPES.ForOfStatement ||
-    node.parent.parent.type === AST_NODE_TYPES.ForInStatement ||
-    (node.parent.type === AST_NODE_TYPES.VariableDeclaration && node.parent.kind !== 'const')
+    node.parent.parent.type === AST_NODE_TYPES.ForInStatement
   )
     return;
 

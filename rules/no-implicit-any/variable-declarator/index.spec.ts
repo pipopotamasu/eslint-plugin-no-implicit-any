@@ -7,18 +7,6 @@ ruleTester.run('variable-declarator', rule, {
       code: 'const foo: any;',
     },
     {
-      code: 'let foo;',
-    },
-    {
-      code: 'var foo;',
-    },
-    {
-      code: 'let foo = null',
-    },
-    {
-      code: 'var foo = null',
-    },
-    {
       code: `
         const foo: any = {};
         const val = foo.bar;
@@ -85,6 +73,56 @@ ruleTester.run('variable-declarator', rule, {
     {
       code: 'const foo = void 0',
       output: 'const foo: any = void 0',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'let foo;',
+      output: 'let foo: any;',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'let foo, bar;',
+      output: 'let foo: any, bar: any;',
+      errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'let foo = null',
+      output: 'let foo: any = null',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'let foo = undefined',
+      output: 'let foo: any = undefined',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'let foo = void 0',
+      output: 'let foo: any = void 0',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'var foo;',
+      output: 'var foo: any;',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'var foo, bar;',
+      output: 'var foo: any, bar: any;',
+      errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'var foo = null',
+      output: 'var foo: any = null',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'var foo = undefined',
+      output: 'var foo: any = undefined',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'var foo = void 0',
+      output: 'var foo: any = void 0',
       errors: [{ messageId: 'missingAnyType' }],
     },
   ],
