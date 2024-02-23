@@ -56,6 +56,11 @@ function getReturnStatementNodes(nodes: TSESTree.Statement[]) {
           returnStatementNodes.push(getReturnStatementNodes(caseNode.consequent));
         });
         break;
+      case AST_NODE_TYPES.TryStatement:
+        returnStatementNodes.push(getReturnStatementNodes(node.block.body));
+        if (node.handler) returnStatementNodes.push(getReturnStatementNode(node.handler.body));
+        if (node.finalizer) returnStatementNodes.push(getReturnStatementNodes(node.finalizer.body));
+        break;
       case AST_NODE_TYPES.IfStatement:
         returnStatementNodes.push(getReturnStatementNode(node.consequent));
         if (node.alternate) returnStatementNodes.push(getReturnStatementNode(node.alternate));
@@ -91,7 +96,6 @@ export const lintReturnStatement = (
   const functionNode = getFunctionNode(node.parent);
   if (functionNode.body.type !== AST_NODE_TYPES.BlockStatement) return;
   const returnStatementNodes = getReturnStatementNodes(functionNode.body.body);
-
   let shouldReport = true;
 
   for (const returnStatementNode of returnStatementNodes) {
