@@ -99,6 +99,31 @@ ruleTester.run('return-statement', rule, {
         }
       `,
     },
+    {
+      code: `
+        function foo () {
+          try {
+            return doSomethingMightHaveError();
+          } catch {
+            throw new Error('error');
+          } finally {
+            return null;
+          }
+        }
+      `,
+    },
+    {
+      code: `
+        function foo () {
+          try {
+            doSomethingMightHaveError();
+            return null;
+          } catch {
+            return 'error'
+          }
+        }
+      `,
+    },
   ],
   invalid: [
     {
