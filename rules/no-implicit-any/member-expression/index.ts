@@ -21,7 +21,7 @@ export const lintMemberExpression = (
   const nodeType = parserServices.getTypeAtLocation(node);
   const objType = parserServices.getTypeAtLocation(node.object);
 
-  if (nodeType.flags === ts.TypeFlags.Any && objType.symbol?.escapedName === '__object') {
+  if (nodeType.flags === ts.TypeFlags.Any && objType.symbol?.escapedName !== 'Array') {
     context.report({
       node,
       messageId: 'missingAnyType',
