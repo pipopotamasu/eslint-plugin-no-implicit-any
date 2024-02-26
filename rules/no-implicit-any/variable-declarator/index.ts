@@ -34,5 +34,13 @@ export const lintVariableDeclarator = (
         return fixer.insertTextAfter(node.id, ': any');
       },
     });
+  } else if (node.init.type === AST_NODE_TYPES.ArrayExpression && node.init.elements.length === 0) {
+    context.report({
+      node,
+      messageId: 'missingAnyType',
+      fix(fixer) {
+        return fixer.insertTextAfter(node.id, ': any[]');
+      },
+    });
   }
 };

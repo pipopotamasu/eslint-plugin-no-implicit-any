@@ -48,6 +48,12 @@ ruleTester.run('variable-declarator', rule, {
           for (const el of arr) {}
         `,
     },
+    {
+      code: 'const foo = [1]',
+    },
+    {
+      code: 'const foo: any = []',
+    },
   ],
   invalid: [
     {
@@ -123,6 +129,21 @@ ruleTester.run('variable-declarator', rule, {
     {
       code: 'var foo = void 0',
       output: 'var foo: any = void 0',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'const foo = []',
+      output: 'const foo: any[] = []',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'let foo = []',
+      output: 'let foo: any[] = []',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'var foo = []',
+      output: 'var foo: any[] = []',
       errors: [{ messageId: 'missingAnyType' }],
     },
   ],
