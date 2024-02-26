@@ -4,6 +4,7 @@ import {
   lintFunctionDeclaration,
   lintFunctionExpression,
   lintArrowFunctionExpression,
+  lintTSFunctionType,
 } from './function-args';
 import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
@@ -41,6 +42,9 @@ export const rule = createRule({
       },
       ArrowFunctionExpression(node) {
         lintArrowFunctionExpression(context, node);
+      },
+      TSFunctionType(node) {
+        lintTSFunctionType(context, node);
       },
       VariableDeclarator(node) {
         lintVariableDeclarator(context, node);

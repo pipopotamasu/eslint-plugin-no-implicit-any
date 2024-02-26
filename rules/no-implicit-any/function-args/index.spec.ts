@@ -162,6 +162,24 @@ ruleTester.run('function-args', rule, {
           foo(function (bar) {});
         `,
     },
+    // TSFunctionType
+    {
+      code: 'type Foo = (arg: any) => void;',
+    },
+    {
+      code: `
+        type Foo = {
+          fn: (arg: any) => void;
+        }
+      `,
+    },
+    {
+      code: `
+        interface Foo {
+          fn: (arg: any) => void;
+        }
+      `,
+    },
   ],
   invalid: [
     // FunctionDeclaration or FunctionExpression
@@ -251,6 +269,38 @@ ruleTester.run('function-args', rule, {
       output: `
           const foo: any = [];
           foo.map((arg: any) => {});
+        `,
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    // TSFunctionType
+    {
+      code: 'type Foo = (arg) => void;',
+      output: 'type Foo = (arg: any) => void;',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: `
+          type Foo = {
+            fn: (arg) => void;
+          }
+        `,
+      output: `
+          type Foo = {
+            fn: (arg: any) => void;
+          }
+        `,
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: `
+        interface Foo {
+          fn: (arg) => void;
+        }
+        `,
+      output: `
+        interface Foo {
+          fn: (arg: any) => void;
+        }
         `,
       errors: [{ messageId: 'missingAnyType' }],
     },
