@@ -93,6 +93,15 @@ export const lintFunctionDeclaration = (
   });
 };
 
+export const lintTSFunctionType = (
+  context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
+  node: TSESTree.TSFunctionType
+) => {
+  node.params.forEach((arg) => {
+    lintArg(context, arg);
+  });
+};
+
 export const lintFunctionExpression = (
   context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.FunctionExpression
