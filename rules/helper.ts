@@ -1,15 +1,22 @@
 import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 import type { CompilerOptions } from 'typescript';
 
-export function isNullOrUndefinedOrVoid(node: TSESTree.Expression) {
-  if (node.type === AST_NODE_TYPES.Literal) {
-    return node.value === null;
-  } else if (node.type === AST_NODE_TYPES.Identifier) {
-    return node.name === 'undefined';
-  } else if (node.type === AST_NODE_TYPES.UnaryExpression) {
-    return node.operator === 'void';
-  }
+export function isNull(node: TSESTree.Expression) {
+  return node.type === AST_NODE_TYPES.Literal && node.value === null;
+}
 
+export function isUndefined(node: TSESTree.Expression) {
+  return node.type === AST_NODE_TYPES.Identifier && node.name === 'undefined';
+}
+
+export function isVoid(node: TSESTree.Expression) {
+  return node.type === AST_NODE_TYPES.UnaryExpression && node.operator === 'void';
+}
+
+export function isNullOrUndefinedOrVoid(node: TSESTree.Expression) {
+  if (isNull(node)) return true;
+  if (isUndefined(node)) return true;
+  if (isVoid(node)) return true;
   return false;
 }
 
