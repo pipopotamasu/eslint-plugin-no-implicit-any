@@ -1,6 +1,11 @@
 import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
 import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
-import { isNullOrUndefinedOrVoid, enabledStrictNullChecks } from '../../helper';
+import {
+  isNullOrUndefinedOrVoid,
+  isNull,
+  isUndefined,
+  enabledStrictNullChecks,
+} from '../../helper';
 
 function hasTypeAnnotationInAncestors(node: TSESTree.Node) {
   if (node === null) {
@@ -74,6 +79,12 @@ function getReturnStatementNodes(nodes: TSESTree.Statement[]) {
   return returnStatementNodes.flat(Infinity).filter(Boolean);
 }
 
+function getCastType(node: TSESTree.Expression) {
+  if (isNull(node)) return 'null';
+  if (isUndefined(node)) return 'undefined';
+  return 'any';
+}
+
 function isAllNullOrUndefinedOrVoid(node: TSESTree.LogicalExpression) {
   const { left, right } = node;
   if (left.type === AST_NODE_TYPES.LogicalExpression) {
@@ -120,7 +131,7 @@ export const lintReturnStatement = (
       node: node,
       messageId: 'missingAnyType',
       fix(fixer) {
-        return fixer.insertTextAfter(node.argument, ' as any');
+        return fixer.insertTextAfter(node.argument, ` as ${getCastType(node.argument)}`);
       },
     });
   }

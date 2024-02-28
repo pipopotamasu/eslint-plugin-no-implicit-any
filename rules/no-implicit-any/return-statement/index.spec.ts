@@ -128,17 +128,12 @@ ruleTester.run('return-statement', rule, {
   invalid: [
     {
       code: 'const foo = () => { return null }',
-      output: 'const foo = () => { return null as any }',
-      errors: [{ messageId: 'missingAnyType' }],
-    },
-    {
-      code: 'const foo = () => { return null; }',
-      output: 'const foo = () => { return null as any; }',
+      output: 'const foo = () => { return null as null }',
       errors: [{ messageId: 'missingAnyType' }],
     },
     {
       code: 'const foo = () => { return undefined }',
-      output: 'const foo = () => { return undefined as any }',
+      output: 'const foo = () => { return undefined as undefined }',
       errors: [{ messageId: 'missingAnyType' }],
     },
     {

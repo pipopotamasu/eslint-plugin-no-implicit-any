@@ -1,15 +1,15 @@
 import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 import type { CompilerOptions } from 'typescript';
 
-function isNull(node: TSESTree.Expression) {
+export function isNull(node: TSESTree.Expression) {
   return node.type === AST_NODE_TYPES.Literal && node.value === null;
 }
 
-function isUndefined(node: TSESTree.Expression) {
+export function isUndefined(node: TSESTree.Expression) {
   return node.type === AST_NODE_TYPES.Identifier && node.name === 'undefined';
 }
 
-function isVoid(node: TSESTree.Expression) {
+export function isVoid(node: TSESTree.Expression) {
   return node.type === AST_NODE_TYPES.UnaryExpression && node.operator === 'void';
 }
 
