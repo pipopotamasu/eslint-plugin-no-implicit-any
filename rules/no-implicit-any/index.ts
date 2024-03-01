@@ -9,6 +9,7 @@ import {
 import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
 import { lintReturnStatement } from './return-statement';
+import { lintObjectExpression } from './object-expression';
 
 function hasJSExtension(filePath: string) {
   return /\.(js|jsx|mjs|cjs)$/.test(filePath);
@@ -54,6 +55,9 @@ export const rule = createRule({
       },
       ReturnStatement(node) {
         lintReturnStatement(context, node);
+      },
+      ObjectExpression(node) {
+        lintObjectExpression(context, node);
       },
     };
   },
