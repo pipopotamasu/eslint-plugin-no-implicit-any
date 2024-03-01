@@ -18,20 +18,12 @@ export const lintObjectExpression = (
 
     const value = property.value;
 
-    if (isNull(value)) {
+    if (isNull(value) || isUndefined(value)) {
       context.report({
         node: value,
         messageId: 'missingAnyType',
         fix(fixer) {
-          return fixer.insertTextAfter(value, ' as null');
-        },
-      });
-    } else if (isUndefined(value)) {
-      context.report({
-        node: value,
-        messageId: 'missingAnyType',
-        fix(fixer) {
-          return fixer.insertTextAfter(value, ' as undefined');
+          return fixer.insertTextAfter(value, ' as any');
         },
       });
     } else if (value.type === AST_NODE_TYPES.ArrayExpression && value.elements.length === 0) {
@@ -39,7 +31,7 @@ export const lintObjectExpression = (
         node: value,
         messageId: 'missingAnyType',
         fix(fixer) {
-          return fixer.insertTextAfter(value, ' as never[]');
+          return fixer.insertTextAfter(value, ' as any[]');
         },
       });
     }
