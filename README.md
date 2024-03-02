@@ -56,7 +56,7 @@ const foo = (...args: any[]) => {};
 
 const foo = { key: (arg: any) => {} };
 
-const foo = { key: 'value' };
+const foo = {};
 
 (foo as any)['key'];
 ```
@@ -67,6 +67,9 @@ More examples here:
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/member-expression/index.spec.ts
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/variable-declarator/index.spec.ts
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/return-statement/index.spec.ts
+- https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/tree/main/rules/no-implicit-any/implicit-return/index.spec.ts
+- https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/object-expression/index.spec.ts
+- https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/ts-property-signature/index.spec.ts
 
 ## License
 
