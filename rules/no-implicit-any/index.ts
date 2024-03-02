@@ -9,6 +9,7 @@ import {
 import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
 import { lintReturnStatement } from './return-statement';
+import { lintImplicitReturn } from './implicit-return';
 import { lintObjectExpression } from './object-expression';
 
 function hasJSExtension(filePath: string) {
@@ -43,6 +44,7 @@ export const rule = createRule({
       },
       ArrowFunctionExpression(node) {
         lintArgsOfArrowFunctionExpression(context, node);
+        lintImplicitReturn(context, node);
       },
       TSFunctionType(node) {
         lintArgsOfTSFunctionType(context, node);
