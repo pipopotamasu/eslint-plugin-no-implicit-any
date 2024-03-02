@@ -9,6 +9,7 @@ ruleTester.run('implicit-return', rule, {
     { code: 'const foo = () => (null as null)' },
     { code: 'const foo = () => (null) as null' },
     { code: 'const foo = (): null => null' },
+    { code: 'const foo = () => (val = undefined as undefined)' },
   ],
   invalid: [
     {
@@ -39,6 +40,17 @@ ruleTester.run('implicit-return', rule, {
     {
       code: 'const foo = () => ([])',
       output: 'const foo = () => ([] as any[])',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: `
+        let val: any;
+        const foo = () => (val = undefined)
+      `,
+      output: `
+        let val: any;
+        const foo = () => (val = undefined as undefined)
+      `,
       errors: [{ messageId: 'missingAnyType' }],
     },
   ],
