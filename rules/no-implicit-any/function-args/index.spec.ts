@@ -213,6 +213,11 @@ ruleTester.run('function-args', rule, {
       output: 'function foo (...args: any[]) {}',
       errors: [{ messageId: 'missingAnyType' }],
     },
+    {
+      code: 'function foo ([arg1, arg2]) {}',
+      output: 'function foo ([arg1, arg2]: any[]) {}',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
     // ArrowFunctionExpression
     {
       code: 'const foo = (arg1, arg2) => {}',
@@ -247,6 +252,16 @@ ruleTester.run('function-args', rule, {
     {
       code: 'const foo = ({ arg1, ...rest }) => {}',
       output: 'const foo = ({ arg1, ...rest }: any) => {}',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'const foo = (...args) => {}',
+      output: 'const foo = (...args: any[]) => {}',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
+      code: 'const foo = ([arg1, arg2]) => {}',
+      output: 'const foo = ([arg1, arg2]: any[]) => {}',
       errors: [{ messageId: 'missingAnyType' }],
     },
     // CallExpression

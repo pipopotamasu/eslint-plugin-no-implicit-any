@@ -72,7 +72,10 @@ function lintArg(
           }
         }
       });
-    } else if (type.symbol?.escapedName === 'Array') {
+    } else if (
+      arg.type === AST_NODE_TYPES.ArrayPattern ||
+      arg.type === AST_NODE_TYPES.RestElement
+    ) {
       context.report({
         node: arg,
         messageId: 'missingAnyType',
