@@ -1,10 +1,10 @@
 import { ESLintUtils } from '@typescript-eslint/utils';
 
 import {
-  lintFunctionDeclaration,
-  lintFunctionExpression,
-  lintArrowFunctionExpression,
-  lintTSFunctionType,
+  lintArgsOfFunctionDeclaration,
+  lintArgsOfFunctionExpression,
+  lintArgsOfArrowFunctionExpression,
+  lintArgsOfTSFunctionType,
 } from './function-args';
 import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
@@ -36,16 +36,16 @@ export const rule = createRule({
 
     return {
       FunctionDeclaration(node) {
-        lintFunctionDeclaration(context, node);
+        lintArgsOfFunctionDeclaration(context, node);
       },
       FunctionExpression(node) {
-        lintFunctionExpression(context, node);
+        lintArgsOfFunctionExpression(context, node);
       },
       ArrowFunctionExpression(node) {
-        lintArrowFunctionExpression(context, node);
+        lintArgsOfArrowFunctionExpression(context, node);
       },
       TSFunctionType(node) {
-        lintTSFunctionType(context, node);
+        lintArgsOfTSFunctionType(context, node);
       },
       VariableDeclarator(node) {
         lintVariableDeclarator(context, node);
