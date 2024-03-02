@@ -63,8 +63,8 @@ export const rule = createRule({
         lintObjectExpression(context, node);
       },
       TSPropertySignature(node) {
-        lintTSPropertySignature(context, node)
-      }
+        lintTSPropertySignature(context, node);
+      },
     };
   },
 });
