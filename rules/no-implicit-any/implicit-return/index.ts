@@ -10,35 +10,40 @@ export const lintImplicitReturn = (
   const bodyType = bodyNode.type;
   const parserServices = ESLintUtils.getParserServices(context);
   if (
+    enabledStrictNullChecks(parserServices.program.getCompilerOptions()) ||
     bodyType === AST_NODE_TYPES.BlockStatement ||
     bodyType === AST_NODE_TYPES.TSAsExpression ||
-    node.returnType ||
-    enabledStrictNullChecks(parserServices.program.getCompilerOptions())
+    node.returnType
   )
     return;
 
-  if (isNull(bodyNode)) {
+  const targetNode = bodyType === AST_NODE_TYPES.AssignmentExpression ? bodyNode.right : bodyNode;
+
+  if (isNull(targetNode)) {
     context.report({
-      node: bodyNode,
+      node: targetNode,
       messageId: 'missingAnyType',
       fix(fixer) {
-        return fixer.insertTextAfter(bodyNode, ' as null');
+        return fixer.insertTextAfter(targetNode, ' as null');
       },
     });
-  } else if (isUndefined(bodyNode)) {
+  } else if (isUndefined(targetNode)) {
     context.report({
-      node: bodyNode,
+      node: targetNode,
       messageId: 'missingAnyType',
       fix(fixer) {
-        return fixer.insertTextAfter(bodyNode, ' as undefined');
+        return fixer.insertTextAfter(targetNode, ' as undefined');
       },
     });
-  } else if (bodyNode.type === AST_NODE_TYPES.ArrayExpression && bodyNode.elements.length === 0) {
+  } else if (
+    targetNode.type === AST_NODE_TYPES.ArrayExpression &&
+    targetNode.elements.length === 0
+  ) {
     context.report({
-      node: bodyNode,
+      node: targetNode,
       messageId: 'missingAnyType',
       fix(fixer) {
-        return fixer.insertTextAfter(bodyNode, ' as any[]');
+        return fixer.insertTextAfter(targetNode, ' as any[]');
       },
     });
   }
