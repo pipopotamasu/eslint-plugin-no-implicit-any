@@ -11,6 +11,7 @@ import { lintVariableDeclarator } from './variable-declarator';
 import { lintReturnStatement } from './return-statement';
 import { lintImplicitReturn } from './implicit-return';
 import { lintObjectExpression } from './object-expression';
+import { lintTSPropertySignature } from './ts-property-signature';
 
 function hasJSExtension(filePath: string) {
   return /\.(js|jsx|mjs|cjs)$/.test(filePath);
@@ -60,6 +61,9 @@ export const rule = createRule({
       },
       ObjectExpression(node) {
         lintObjectExpression(context, node);
+      },
+      TSPropertySignature(node) {
+        lintTSPropertySignature(context, node);
       },
     };
   },
