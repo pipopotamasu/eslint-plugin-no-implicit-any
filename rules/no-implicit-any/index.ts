@@ -1,14 +1,15 @@
 import { ESLintUtils } from '@typescript-eslint/utils';
 
 import {
-  lintFunctionDeclaration,
-  lintFunctionExpression,
-  lintArrowFunctionExpression,
-  lintTSFunctionType,
+  lintArgsOfFunctionDeclaration,
+  lintArgsOfFunctionExpression,
+  lintArgsOfArrowFunctionExpression,
+  lintArgsOfTSFunctionType,
 } from './function-args';
 import { lintMemberExpression } from './member-expression';
 import { lintVariableDeclarator } from './variable-declarator';
 import { lintReturnStatement } from './return-statement';
+import { lintImplicitReturn } from './implicit-return';
 import { lintObjectExpression } from './object-expression';
 
 function hasJSExtension(filePath: string) {
@@ -36,16 +37,17 @@ export const rule = createRule({
 
     return {
       FunctionDeclaration(node) {
-        lintFunctionDeclaration(context, node);
+        lintArgsOfFunctionDeclaration(context, node);
       },
       FunctionExpression(node) {
-        lintFunctionExpression(context, node);
+        lintArgsOfFunctionExpression(context, node);
       },
       ArrowFunctionExpression(node) {
-        lintArrowFunctionExpression(context, node);
+        lintArgsOfArrowFunctionExpression(context, node);
+        lintImplicitReturn(context, node);
       },
       TSFunctionType(node) {
-        lintTSFunctionType(context, node);
+        lintArgsOfTSFunctionType(context, node);
       },
       VariableDeclarator(node) {
         lintVariableDeclarator(context, node);

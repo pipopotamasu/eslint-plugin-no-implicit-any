@@ -84,7 +84,7 @@ function lintArg(
   }
 }
 
-export const lintFunctionDeclaration = (
+export const lintArgsOfFunctionDeclaration = (
   context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.FunctionDeclaration
 ) => {
@@ -93,7 +93,7 @@ export const lintFunctionDeclaration = (
   });
 };
 
-export const lintTSFunctionType = (
+export const lintArgsOfTSFunctionType = (
   context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.TSFunctionType
 ) => {
@@ -102,7 +102,7 @@ export const lintTSFunctionType = (
   });
 };
 
-export const lintFunctionExpression = (
+export const lintArgsOfFunctionExpression = (
   context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.FunctionExpression
 ) => {
@@ -140,7 +140,7 @@ export const lintFunctionExpression = (
   });
 };
 
-export const lintArrowFunctionExpression = (
+export const lintArgsOfArrowFunctionExpression = (
   context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.ArrowFunctionExpression
 ) => {
