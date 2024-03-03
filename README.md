@@ -70,6 +70,7 @@ More examples here:
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/tree/main/rules/no-implicit-any/implicit-return/index.spec.ts
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/object-expression/index.spec.ts
 - https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/ts-property-signature/index.spec.ts
+- https://github.com/pipopotamasu/eslint-plugin-no-implicit-any/blob/main/rules/no-implicit-any/property-definition/index.spec.ts
 
 ## License
 
