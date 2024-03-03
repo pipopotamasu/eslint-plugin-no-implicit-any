@@ -11,6 +11,9 @@ ruleTester.run('function-args', rule, {
       code: 'function foo (arg = "") {}',
     },
     {
+      code: 'function foo (arg1: any = null, arg2: any = undefined, arg3: any[] = []) {}',
+    },
+    {
       code: 'const arrayObjFunc = [{ key: function (arg1: any, arg2: any) {} }];',
     },
     {
@@ -37,6 +40,9 @@ ruleTester.run('function-args', rule, {
     },
     {
       code: 'const foo = (arg = "") => {};',
+    },
+    {
+      code: 'const foo = (arg1: any = null, arg2: any = undefined, arg3: any[] = []) => {}',
     },
     {
       code: 'const foo = (arg: any = {}) => {};',
@@ -189,9 +195,13 @@ ruleTester.run('function-args', rule, {
       errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
     },
     {
-      code: 'function foo (arg = null) {}',
-      output: 'function foo (arg: any = null) {}',
-      errors: [{ messageId: 'missingAnyType' }],
+      code: 'function foo (arg1 = null, arg2 = undefined, arg3 = []) {}',
+      output: 'function foo (arg1: any = null, arg2: any = undefined, arg3: any[] = []) {}',
+      errors: [
+        { messageId: 'missingAnyType' },
+        { messageId: 'missingAnyType' },
+        { messageId: 'missingAnyType' },
+      ],
     },
     {
       code: 'const arrayObjFunc = [{ key: function (arg1, arg2) {} }];',
@@ -225,9 +235,13 @@ ruleTester.run('function-args', rule, {
       errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
     },
     {
-      code: 'const foo = (arg = null) => {}',
-      output: 'const foo = (arg: any = null) => {}',
-      errors: [{ messageId: 'missingAnyType' }],
+      code: 'const foo = (arg1 = null, arg2 = undefined, arg3 = []) => {}',
+      output: 'const foo = (arg1: any = null, arg2: any = undefined, arg3: any[] = []) => {}',
+      errors: [
+        { messageId: 'missingAnyType' },
+        { messageId: 'missingAnyType' },
+        { messageId: 'missingAnyType' },
+      ],
     },
     {
       code: 'const foo = arg => {}',

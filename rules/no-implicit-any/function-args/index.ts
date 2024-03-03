@@ -1,5 +1,6 @@
 import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
 import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
+import { isNull, isUndefined, enabledStrictNullChecks } from '../../helper';
 
 import * as ts from 'typescript';
 
@@ -22,13 +23,27 @@ function lintArg(
   const parserServices = ESLintUtils.getParserServices(context);
 
   if (arg.type === AST_NODE_TYPES.AssignmentPattern) {
-    const type = parserServices.getTypeAtLocation(arg.left);
-    if (!arg.left.typeAnnotation && type.flags === ts.TypeFlags.Any) {
+    if (
+      arg.left.typeAnnotation ||
+      enabledStrictNullChecks(parserServices.program.getCompilerOptions())
+    )
+      return;
+
+    const right = arg.right;
+    if (isNull(right) || isUndefined(right)) {
       context.report({
         node: arg.left,
         messageId: 'missingAnyType',
         fix(fixer) {
           return fixer.insertTextAfter(arg.left, ': any');
+        },
+      });
+    } else if (right.type === AST_NODE_TYPES.ArrayExpression && right.elements.length === 0) {
+      context.report({
+        node: arg.left,
+        messageId: 'missingAnyType',
+        fix(fixer) {
+          return fixer.insertTextAfter(arg.left, ': any[]');
         },
       });
     }
