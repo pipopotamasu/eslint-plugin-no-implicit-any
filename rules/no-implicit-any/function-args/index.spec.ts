@@ -14,6 +14,9 @@ ruleTester.run('function-args', rule, {
       code: 'function foo (arg1: any = null, arg2: any = undefined, arg3: any[] = []) {}',
     },
     {
+      code: 'function foo ({ a: { b: { c } } }: any) {}',
+    },
+    {
       code: 'const arrayObjFunc = [{ key: function (arg1: any, arg2: any) {} }];',
     },
     {
@@ -46,6 +49,9 @@ ruleTester.run('function-args', rule, {
     },
     {
       code: 'const foo = (arg: any = {}) => {};',
+    },
+    {
+      code: 'const foo = ({ a: { b: { c } } }: any) => {}',
     },
     {
       code: 'const arrayObjArrowFunc = [{ key: (arg1: any, arg2: any ) => {} }];',
@@ -204,6 +210,11 @@ ruleTester.run('function-args', rule, {
       ],
     },
     {
+      code: 'function foo ({ a: { b: { c } } }) {}',
+      output: 'function foo ({ a: { b: { c } } }: any) {}',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
       code: 'const arrayObjFunc = [{ key: function (arg1, arg2) {} }];',
       output: 'const arrayObjFunc = [{ key: function (arg1: any, arg2: any) {} }];',
       errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
@@ -211,7 +222,7 @@ ruleTester.run('function-args', rule, {
     {
       code: 'function foo ({ arg1, arg2 }) {}',
       output: 'function foo ({ arg1, arg2 }: any) {}',
-      errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+      errors: [{ messageId: 'missingAnyType' }],
     },
     {
       code: 'function foo ({ arg1, ...rest }) {}',
@@ -244,6 +255,11 @@ ruleTester.run('function-args', rule, {
       ],
     },
     {
+      code: 'const foo = ({ a: { b: { c } } }) => {}',
+      output: 'const foo = ({ a: { b: { c } } }: any) => {}',
+      errors: [{ messageId: 'missingAnyType' }],
+    },
+    {
       code: 'const foo = arg => {}',
       output: 'const foo = (arg: any) => {}',
       errors: [{ messageId: 'missingAnyType' }],
@@ -261,7 +277,7 @@ ruleTester.run('function-args', rule, {
     {
       code: 'const foo = ({ arg1, arg2 }) => {}',
       output: 'const foo = ({ arg1, arg2 }: any) => {}',
-      errors: [{ messageId: 'missingAnyType' }, { messageId: 'missingAnyType' }],
+      errors: [{ messageId: 'missingAnyType' }],
     },
     {
       code: 'const foo = ({ arg1, ...rest }) => {}',

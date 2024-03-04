@@ -70,22 +70,16 @@ function lintArg(
       },
     });
   } else if (type.flags === ts.TypeFlags.Object) {
-    if (arg.type === AST_NODE_TYPES.ObjectPattern) {
-      arg.properties.forEach((property) => {
-        if (property.type === AST_NODE_TYPES.Property) {
-          if (!property.key['typeAnnotation']) {
-            const type = parserServices.getTypeAtLocation(property);
-            if (type.flags === ts.TypeFlags.Any) {
-              context.report({
-                node: arg,
-                messageId: 'missingAnyType',
-                fix(fixer) {
-                  return fixer.insertTextAfter(arg, ': any');
-                },
-              });
-            }
-          }
-        }
+    if (
+      arg.type === AST_NODE_TYPES.ObjectPattern &&
+      !(arg.properties.length === 1 && arg.properties[0].type === AST_NODE_TYPES.RestElement)
+    ) {
+      context.report({
+        node: arg,
+        messageId: 'missingAnyType',
+        fix(fixer) {
+          return fixer.insertTextAfter(arg, ': any');
+        },
       });
     } else if (
       arg.type === AST_NODE_TYPES.ArrayPattern ||
