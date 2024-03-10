@@ -1,23 +1,46 @@
-import { ESLintUtils, type TSESLint } from '@typescript-eslint/utils';
+import {
+  ESLintUtils,
+  type TSESLint,
+  type ParserServicesWithTypeInformation,
+} from '@typescript-eslint/utils';
 import { type TSESTree, AST_NODE_TYPES } from '@typescript-eslint/types';
 
 import * as ts from 'typescript';
 
-function hasAnyAnnotationInAncestors(node: TSESTree.MemberExpression) {
-  if (!node.object) return false;
-  if (!node.object['typeAnnotation'])
-    return hasAnyAnnotationInAncestors(node.object as TSESTree.MemberExpression);
-  if (node.object['typeAnnotation'].type === AST_NODE_TYPES.TSAnyKeyword) return true;
-  return false;
+function hasTypeAnnotationInAncestors(
+  parserServices: ParserServicesWithTypeInformation,
+  node: TSESTree.MemberExpression
+) {
+  if (node.object.type === AST_NODE_TYPES.TSAsExpression) {
+    return true;
+  } else if (node.object.type === AST_NODE_TYPES.Identifier) {
+    const symbol = parserServices.getSymbolAtLocation(node.object);
+    if (symbol && symbol.valueDeclaration) {
+      const declaration = parserServices.tsNodeToESTreeNodeMap.get(symbol.valueDeclaration);
+      if (declaration.type === AST_NODE_TYPES.VariableDeclarator) {
+        return (
+          !!declaration.id.typeAnnotation || declaration.init.type === AST_NODE_TYPES.TSAsExpression
+        );
+      } else {
+        return false;
+      }
+    }
+
+    return false;
+  } else if (node.object.type === AST_NODE_TYPES.MemberExpression) {
+    return hasTypeAnnotationInAncestors(parserServices, node.object);
+  } else {
+    return false;
+  }
 }
 
 export const lintMemberExpression = (
   context: Readonly<TSESLint.RuleContext<'missingAnyType', any[]>>,
   node: TSESTree.MemberExpression
 ) => {
-  if (!node.computed || hasAnyAnnotationInAncestors(node)) return;
-
   const parserServices = ESLintUtils.getParserServices(context);
+  if (!node.computed || hasTypeAnnotationInAncestors(parserServices, node)) return;
+
   const nodeType = parserServices.getTypeAtLocation(node);
   const objType = parserServices.getTypeAtLocation(node.object);
 

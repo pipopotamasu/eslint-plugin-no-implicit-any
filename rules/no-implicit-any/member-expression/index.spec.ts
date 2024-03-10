@@ -5,6 +5,18 @@ ruleTester.run('member-expression', rule, {
   valid: [
     {
       code: `
+        const foo: any = undefined;
+        foo['key'];
+      `,
+    },
+    {
+      code: `
+        const foo = undefined as any;
+        foo['key'];
+      `,
+    },
+    {
+      code: `
           const foo = { key: 'value' };
           foo['key'];
         `,
